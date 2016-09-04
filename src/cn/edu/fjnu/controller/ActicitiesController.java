@@ -121,7 +121,7 @@ public class ActicitiesController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/monitored/avtivities/get", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/monitored/avtivities/gett", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String getActivitiedByMonitored(@RequestParam(value = "accesstoken") String accesstoken,
                                            @RequestParam(value = "isOnTime") String isOnTime,
                                            @RequestParam(value = "page") String page) {
