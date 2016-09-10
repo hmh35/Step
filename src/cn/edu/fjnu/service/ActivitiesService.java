@@ -22,7 +22,7 @@ public interface ActivitiesService {
 
 
 
-
+   Activities getActivitiesById(Integer actNo);
     /**
      * 通过创建者No获取活动
      *

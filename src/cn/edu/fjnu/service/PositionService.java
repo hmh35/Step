@@ -40,4 +40,6 @@ public interface PositionService {
      * @return
      */
     List<Position> getAllPosition(String monitoredNo);
+
+    List<Position> getActivitiesObjectNewestPosition(String monitorNo,String pushObject);
 }

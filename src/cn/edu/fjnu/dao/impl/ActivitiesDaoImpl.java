@@ -62,4 +62,5 @@ public class ActivitiesDaoImpl extends HibernateGenericDao<Activities, Integer> 
     }
 
 
+
 }

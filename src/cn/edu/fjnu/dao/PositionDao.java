@@ -19,4 +19,6 @@ public interface PositionDao extends GenericDao<Position,Integer>{
     Position getNewestPosition(String monitoredNo);
 
     List<Position> getAllNewestPosition(String monitorNo);
+
+    List<Position> getActivitiesObjectNewestPosition(String monitorNo,String pushObject);
 }

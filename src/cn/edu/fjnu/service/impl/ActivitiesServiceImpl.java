@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Date;
 import java.util.List;
 
@@ -115,5 +116,11 @@ public class ActivitiesServiceImpl implements ActivitiesService {
         System.out.println("要删除的活动号："+activities.getActNo());
         activitiesDao.deleteById(activities.getActNo());
 
+    }
+    @Override
+    public Activities getActivitiesById(Integer actNo)
+    {
+        Activities activities=activitiesDao.findById(actNo);
+        return activities;
     }
 }

@@ -1,10 +1,12 @@
 package cn.edu.fjnu.controller;
 
+import cn.edu.fjnu.beans.Activities;
 import cn.edu.fjnu.beans.Monitor;
 import cn.edu.fjnu.beans.Monitored;
 import cn.edu.fjnu.beans.Position;
 import cn.edu.fjnu.beans.base.ResultData;
 import cn.edu.fjnu.exception.AppRTException;
+import cn.edu.fjnu.service.ActivitiesService;
 import cn.edu.fjnu.service.MonitorService;
 import cn.edu.fjnu.service.MonitoredService;
 import cn.edu.fjnu.service.PositionService;
@@ -39,6 +41,9 @@ public class PositionController {
 
     @Resource
     private MonitorService monitorService;
+
+    @Resource
+    private ActivitiesService activitiesService;
 
     /**
      * 保存地理位置
@@ -88,6 +93,32 @@ public class PositionController {
         }
         return JSON.toJSONString(resultData, true);
     }
+    /**
+     * 获取活动参与人员最新的位置信息
+     * @param accesstoken
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/monitor/newest/joinner", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String getAlljoinnerNewestPosition(@RequestParam(value = "accesstoken") String accesstoken,
+                                              @RequestParam(value = "actNo") String actNo) {
+        ResultData resultData = new ResultData();
+        try{
+            System.out.println("活动号："+actNo);
+            Monitor monitor = monitorService.getMonitorByAccesstoken(accesstoken);
+            Activities activities=activitiesService.getActivitiesById(Integer.valueOf(actNo));
+            List<Position> positions = positionService.getActivitiesObjectNewestPosition(monitor.getMonitorNo().toString(),activities.getPushObject());
+            resultData.setData(JSON.toJSONString(positions));
+            System.out.println("所有参与者最新地理位置："+JSON.toJSONString(positions));//输出测试
+            resultData.setStatus(ResultData.SUCCESS);
+        }catch (AppRTException e){
+            resultData.setStatus(ResultData.ERROR);
+            resultData.setErrorCode(e.getCode());
+            resultData.setData(e.getMessage());
+            e.printStackTrace();
+        }
+        return JSON.toJSONString(resultData, true);
+    }
 
     /**
      * 获取监护人手下的所有被监护人最新地理位置
@@ -102,6 +133,7 @@ public class PositionController {
             Monitor monitor = monitorService.getMonitorByAccesstoken(accesstoken);
             List<Position> positions = positionService.getNewestAll(monitor.getMonitorNo().toString());
             resultData.setData(JSON.toJSONString(positions));
+            System.out.println("所有被监护人最新地理位置："+JSON.toJSONString(positions));//输出测试
             resultData.setStatus(ResultData.SUCCESS);
         }catch (AppRTException e){
             resultData.setStatus(ResultData.ERROR);

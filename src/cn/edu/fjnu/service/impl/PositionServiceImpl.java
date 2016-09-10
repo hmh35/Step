@@ -39,11 +39,22 @@ public class PositionServiceImpl implements PositionService{
         return positionDao.getNewestPosition(monitoredNo);
     }
 
+
     @Override
     public List<Position> getNewestAll(String monitorNo) {
         return positionDao.getAllNewestPosition(monitorNo);
     }
 
+    @Override
+    public  List<Position> getActivitiesObjectNewestPosition(String monitorNo,String pushObject){
+        List<Position> positionList;
+        if(pushObject.equals("所有人")){
+         positionList=positionDao.getAllNewestPosition(monitorNo);
+        }
+        else
+          positionList=positionDao.getActivitiesObjectNewestPosition(monitorNo,pushObject);
+        return positionList;
+    }
     @Override
     public List<Position> getAllPosition(String monitoredNo) {
         if(monitoredNo == null || monitoredNo == ""){

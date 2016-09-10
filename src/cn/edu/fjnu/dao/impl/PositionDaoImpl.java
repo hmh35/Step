@@ -25,6 +25,8 @@ public class PositionDaoImpl extends HibernateGenericDao<Position,Integer> imple
         query.setMaxResults(1);
         Position position = (Position) query.uniqueResult();
 
+        /*uniqueResult()返回对象为object*/
+
         /*String hql = "select new cn.edu.Position(positionNo,monitoredNo,addrLong,addrLat," +
                 "address,max(createTime))from Position where monitoredNo=:monitoredNo";
         Query query = getSession().createQuery(hql).setString("monitoredNo",monitoredNo);
@@ -50,6 +52,19 @@ public class PositionDaoImpl extends HibernateGenericDao<Position,Integer> imple
 
         //Query query = getSession().createQuery(hql).setString("monitorNo",monitorNo);
         Query query = getSession().createSQLQuery(sql).addEntity(Position.class).setString(0,monitorNo);
+        List<Position> positions = query.list();
+        return positions;
+    }
+    @Override
+    public List<Position> getActivitiesObjectNewestPosition(String monitorNo,String pushObject)
+    {
+        System.out.println("推送对象："+pushObject);
+        String sql = "SELECT * FROM " +
+                "(SELECT * FROM t_position WHERE MONITORED_NO in " +
+                "(SELECT monitored_no from t_monitored_and_monitor where (MONITOR_NO=? AND (relation_Ship='所有人' OR relation_Ship=?)))" +
+                " ORDER BY CREATE_TIME DESC)" +
+                " as p GROUP BY p.monitored_no;";
+        Query query = getSession().createSQLQuery(sql).addEntity(Position.class).setString(0,monitorNo).setString(1,pushObject);
         List<Position> positions = query.list();
         return positions;
     }
