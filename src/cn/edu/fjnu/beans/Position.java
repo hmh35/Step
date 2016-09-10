@@ -38,6 +38,9 @@ public class Position {
     @Column(name = "create_time")
     private Date createTime;
 
+    @Column(name = "phone_number")
+    private String telPhone;
+
     public Position() {
     }
 
@@ -48,6 +51,13 @@ public class Position {
         this.addrLat = addrLat;
         this.address = address;
         this.createTime = createTime;
+    }
+    public String getTelPhone() {
+        return telPhone;
+    }
+
+    public void setTelPhone(String phoneNumber) {
+        this.telPhone = phoneNumber;
     }
 
     public Integer getPositionNo() {
