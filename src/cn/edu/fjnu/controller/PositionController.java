@@ -104,7 +104,7 @@ public class PositionController {
                                               @RequestParam(value = "actNo") String actNo) {
         ResultData resultData = new ResultData();
         try{
-            System.out.println("活动号："+actNo);
+           // System.out.println("活动号："+actNo);
             Monitor monitor = monitorService.getMonitorByAccesstoken(accesstoken);
             Activities activities=activitiesService.getActivitiesById(Integer.valueOf(actNo));
             List<Position> positions = positionService.getActivitiesObjectNewestPosition(monitor.getMonitorNo().toString(),activities.getPushObject());
