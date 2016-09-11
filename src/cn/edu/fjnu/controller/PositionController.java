@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -59,6 +60,7 @@ public class PositionController {
         try {
             Monitored monitored = monitoredService.getMonitoredByAccesstoken(accesstoken);
             savePosition.setMonitoredNo(monitored.getMonitoredNo().toString());
+            savePosition.setCreateTime(new Date());
             positionService.savePosition(savePosition);
             //进行安全预警
             resultData.setStatus(ResultData.SUCCESS);
