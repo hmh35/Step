@@ -1,11 +1,21 @@
 package cn.edu.fjnu.service.impl;
 
+import cn.edu.fjnu.beans.Monitor;
+import cn.edu.fjnu.beans.Monitored;
 import cn.edu.fjnu.beans.User;
+import cn.edu.fjnu.common.AppExCode;
+import cn.edu.fjnu.dao.MonitorDao;
 import cn.edu.fjnu.dao.UserDao;
+import cn.edu.fjnu.dao.base.Page;
+import cn.edu.fjnu.exception.AppRTException;
+import cn.edu.fjnu.service.LoginLogService;
 import cn.edu.fjnu.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,31 +26,159 @@ import java.util.Map;
  */
 @Service
 public class UserServiceImpl implements UserService {
+    private Logger logger = LoggerFactory.getLogger(MonitorServiceImpl.class);
+
+    @Resource
+    private MonitorDao monitorDao;
+
     @Resource
     private UserDao userDao;
 
+    @Resource
+    private LoginLogService loginLogService;
+
+    @Override
+    public User login(String phoneNum, String userPwd) {
+        if (phoneNum == null || phoneNum == "" || userPwd == null ) {
+            logger.info("login | monitor userName or use_pwd is not null!");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "监护人用户或密码为空");
+        }
+        User user = userDao.uniqueResult("phoneNum", phoneNum);
+        if (user == null) {
+            logger.info("login | this monitor is not exists!");
+            throw new AppRTException(AppExCode.U_IS_EXISTS, "监护人用户名不存在");
+        }
+
+        System.out.println("  service"+user.getUserPwd()+"  "+userPwd+"  "+user.getRealName());
+        if (!user.getUserPwd().equals(userPwd)) {
+            logger.info("login | monitor userName or use_pwd is no valid!");
+            throw new AppRTException(AppExCode.U_ERROR_PWD, "监护人用户名或密码错误");
+        }
+
+        user.setUserPwd(null);
+        return user;
+    }
     @Override
     public void saveUser(User user) {
+        if (user == null || user.getPhoneNum() == null
+                || user.getPhoneNum() == ""
+                || user.getUserPwd() == null
+                || user.getUserPwd() == "") {
+            logger.info("saveMonitor | this monitor is null!");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "监护人含必填注册项为空");
+        }
+        User userTemp = userDao
+                .uniqueResult("userName", user.getPhoneNum());
+        if (userTemp != null) {
+            logger.info("saveMonitor | this monitor is exists!");
+            throw new AppRTException(AppExCode.U_IS_EXISTS, "该监护人用户已存在");
+        }
         userDao.save(user);
     }
 
     @Override
-    public User getUserById(Integer id) {
-        return (User) userDao.findById(id);
+    public void updateUser(User user) {
+        if (user == null || user.getPhoneNum() == null
+                || user.getPhoneNum() == "") {
+            logger.info("updateMonitor | this monitor is null!");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "监护人修改信息错误");
+        }
+        Monitor monitorTemp = monitorDao.uniqueResult("userName", user.getPhoneNum());
+        if (monitorTemp.getStatus().equals(Monitor.MonitorStatus.INVALID)) {
+            logger.info("updateMonitor | monitor is no availabl");
+            throw new AppRTException(AppExCode.U_NOT_AVAILABLE, "用户已被禁用,无法修改密码");
+        }
+        //不能更新的字段
+
+        user.setUserPwd(monitorTemp.getUserPwd());
+        user.setCreateTime(monitorTemp.getCreateTime());
+
+        //可以更新的字段
+        user.setUpdateTime(new Date());
+        userDao.update(user);
     }
 
     @Override
-    public List<User> findAll() {
-        return userDao.findAll();
+    public void updatePassword(String userName, String oldPassword, String newPassword) {
+        if (userName == null || userName == "") {
+            logger.info("updatePassowrd | userName is null!");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "监护人修改密码失败");
+        }
+        if (oldPassword == null || oldPassword == "") {
+            logger.info("old password is null!");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "监护人旧密码为空");
+        }
+        if (newPassword == null || newPassword == "") {
+            logger.info("new password is null!");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "监护人新密码为空");
+        }
+        Monitor monitor = monitorDao.uniqueResult("userName", userName);
+        if (monitor == null) {
+            logger.info("updatePassowrd | this monitor is not exitst!");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "监护人用户不存在，修改密码失败");
+        }
+        if (monitor.getStatus().equals(Monitor.MonitorStatus.INVALID)) {
+            logger.info("updatePassword | monitor is no available");
+            throw new AppRTException(AppExCode.U_NOT_AVAILABLE, "监护人用户已被禁用,无法修改密码");
+        }
+        if (!monitor.getUserPwd().equals(oldPassword)) {
+            logger.info("updatePassword | userName or password is no valid");
+            throw new AppRTException(AppExCode.U_ERROR_PWD, "监护人旧密码错误");
+        }
+        monitor.setUserPwd(newPassword);
+        monitor.setUpdateTime(new Date());
+        monitorDao.update(monitor);
+    }
+    @Override
+    public User getUserByAccesstoken(String accesstoken) {
+        if(accesstoken == null || accesstoken == ""){
+            logger.info("getMonitroByAccesstoken | accesstoken is null!");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "被监护人用户accesstoken错误");
+        }
+        //获取用户用户名
+        String userName = loginLogService.checkAccesstoken(accesstoken);
+        //通过用户名获取用户主键
+        User user = userDao.uniqueResult("userName", userName);
+        if (user == null) {
+            logger.info("getMonitroByAccesstoken | this monitor is not exists!");
+            throw new AppRTException(AppExCode.U_IS_EXISTS, "被监护人用户不存在,无法获取用户信息");
+        }
+
+        return user;
     }
 
     @Override
-    public List<User> findAllByOrder(String orderBy, boolean isAsc) {
-        return userDao.findAllByOrder("id", isAsc);
+    public List<Monitored> getAllMonitoredByMonitorByPage(Integer monitorNo, Page page) {
+        if(monitorNo == null){
+            logger.info("getAllMonitoredByMonitor | monitorNo is null!");
+            throw new AppRTException(AppExCode.U_NOT_FIND_MONITORED, "无法获取所有被监护人");
+        }
+        List<Monitored> monitoredList = monitorDao.getAllMonitoredByMonitorByPage(monitorNo,page);
+        if(monitoredList.size() == 0){
+            logger.info("getAllMonitoredByMonitor | monitoredList is null!");
+            throw new AppRTException(AppExCode.U_NOT_FIND_MONITORED, "不存在对应的被监护人");
+        }
+        return monitoredList;
     }
 
     @Override
-    public List<User> findAllByProperty(Map<String,Object> propertyNameMap) {
-        return userDao.findAllByProperty(propertyNameMap);
+    public List<Monitored> getMonitoredByMonitor(Integer monitorNo,String pushObject) {
+        if(monitorNo == null||pushObject==""){
+            logger.info("getAllMonitoredByMonitor | monitorNo is null!");
+            throw new AppRTException(AppExCode.U_NOT_FIND_MONITORED, "无法获取所有被监护人");
+        }
+        List<Monitored> monitoredList;
+        if(pushObject.equals("所有人"))  //字符串判等要用equals，不能用==
+        {
+            monitoredList = monitorDao.getAllMonitoredByMonitor(monitorNo,pushObject);
+        }
+        else
+            monitoredList=monitorDao.getProperMonitoredByMonitor(monitorNo,pushObject);
+        if(monitoredList.size() == 0){
+            logger.info("getAllMonitoredByMonitor | monitoredList is null");
+            throw new AppRTException(AppExCode.U_NOT_FIND_MONITORED, "不存在对应的被监护人");
+        }
+        return monitoredList;
     }
+
 }

@@ -3,7 +3,10 @@ package cn.edu.fjnu.controller;
 import cn.edu.fjnu.beans.Config;
 import cn.edu.fjnu.beans.Monitor;
 import cn.edu.fjnu.beans.Monitored;
+import cn.edu.fjnu.beans.TestData;
 import cn.edu.fjnu.beans.base.ResultData;
+import cn.edu.fjnu.dao.ConfigDao;
+import cn.edu.fjnu.dao.TestDataDao;
 import cn.edu.fjnu.exception.AppRTException;
 import cn.edu.fjnu.service.ConfigService;
 import cn.edu.fjnu.service.MonitorService;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * @Author: linqiu
@@ -30,6 +34,8 @@ import javax.annotation.Resource;
 public class ConfigController {
 
     private Logger logger = LoggerFactory.getLogger(ConfigController.class);
+    @Resource
+    private TestDataDao testDataDao;
 
     @Resource
     private ConfigService configService;
@@ -108,4 +114,36 @@ public class ConfigController {
         }
         return JSON.toJSONString(resultData, true);
     }
+
+    /**
+     *
+     */
+    @RequestMapping(value = "/savedata", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public void savedata(@RequestParam(value = "testdata") String testdata) {
+       /* TestData  testData1=new TestData();
+        testData1.setName("王鑫");
+        testData1.setCreateTime(new Date());
+        testData1.setSex("男");
+        testData1.setSpeedRate("32-36.3");
+        testData1.setAge(22);
+        testData1.setHeartRate("32-36");
+        String speedax="00000000";
+        for(int i=0;i<3000;i++)
+            speedax=speedax+"-"+"111111111111111111";
+        speedax=speedax+"-"+"000000000000";
+        testData1.setSpeedAx(speedax);
+        testData1.setSpeedAy("123");
+        testData1.setSpeedAz("123");
+        testData1.setHeight(177.00);
+        testData1.setWeight(60.00);*/
+        /*String testdata=JSON.toJSONString(testData1, true);*/
+        System.out.println("测试数据:"+testdata);
+        TestData testData = JSONObject.parseObject(testdata,TestData.class);
+        if(testData.getName()==""||testData.getSpeedRate()==""||testData.getSpeedRate()==null||testData.getName()==null)
+            return;
+        testData.setCreateTime(new Date());
+        testDataDao.save(testData);
+        System.out.println("保存成功");
+    }
+
 }

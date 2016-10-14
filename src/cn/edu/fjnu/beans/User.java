@@ -12,67 +12,72 @@ import java.util.Date;
 @Entity
 @Table(name = "user")
 public class User implements Serializable {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id",updatable = false)
-    private Integer no;
-    @Column(name = "name")
-    private String names;
-    @Column(name = "age")
-    private Integer age;
+    @Column(name="USER_ID",updatable = false)
+    private Integer userId;
 
-    @Column(name = "create_time")
-    //private Timestamp createTime;
+    @Column(name = "PHONE_NUM")
+    private String phoneNum;
+
+    @Column(name = "USER_PWD")
+    private String userPwd;
+
+    @Column(name = "REAL_NAME")
+    private String realName;
+
+    @Column(name = "USER_AGE")
+    private Integer userAge;
+
+    @Column(name = "USER_SEX")
+    private String userSex;
+
+    @Column(name = "CREATE_TIME")
     private Date createTime;
 
-    public User(String names) {
-        this.names = names;
-    }
-    public User(String names,Integer age) {
-        this.names = names;
-        this.age = age;
-    }
-    public User(Integer no,String names,Integer age,Date timestamp) {
-        this.no = no;
-        this.names = names;
-        this.age = age;
-        this.createTime = timestamp;
+    @Column(name = "UPDATE_TIME")
+    private Date updateTime;
+
+    public Integer getUserId() {
+        return userId;
     }
 
-    public User() {
-
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
-    /*public Integer getId() {
-        return id;
+    public String getPhoneNum() {
+        return phoneNum;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }*/
-
-    public Integer getNo() {
-        return no;
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
     }
 
-    public void setNo(Integer no) {
-        this.no = no;
+    public String getRealName() {
+        return realName;
     }
 
-    public String getNames() {
-        return names;
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
 
-    public void setNames(String names) {
-        this.names = names;
+    public Integer getUserAge() {
+        return userAge;
     }
 
-    public Integer getAge() {
-        return age;
+    public void setUserAge(Integer userAge) {
+        this.userAge = userAge;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public String getUserSex() {
+        return userSex;
+    }
+
+    public void setUserSex(String userSex) {
+        this.userSex = userSex;
     }
 
     public Date getCreateTime() {
@@ -82,4 +87,22 @@ public class User implements Serializable {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getUserPwd() {
+        return userPwd;
+    }
+
+    public void setUserPwd(String userPwd) {
+        this.userPwd = userPwd;
+    }
+
+
 }

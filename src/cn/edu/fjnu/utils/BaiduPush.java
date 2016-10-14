@@ -67,7 +67,7 @@ public class BaiduPush {
             for(int i = 0; i < channelIdList.size();i++){
                 channelIds[i] = channelIdList.get(i);
             }
-
+            System.out.println(notification.toString());
             PushBatchUniMsgRequest request = new PushBatchUniMsgRequest()
                     .addChannelIds(channelIds)
                     .addMsgExpires(new Integer(3600))
