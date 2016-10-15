@@ -10,7 +10,7 @@ import java.util.Date;
  * @Description: User类测试实体
  */
 @Entity
-@Table(name = "user")
+@Table(name = "t_user")
 public class User implements Serializable {
 
 
