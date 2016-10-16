@@ -10,7 +10,7 @@ import java.util.Date;
  * @Description: User类测试实体
  */
 @Entity
-@Table(name = "user")
+@Table(name = "t_user")
 public class User implements Serializable {
 
 
@@ -39,6 +39,11 @@ public class User implements Serializable {
 
     @Column(name = "UPDATE_TIME")
     private Date updateTime;
+
+
+
+    @Column(name = "CHANNEL_ID")
+    private String channelId;
 
     public Integer getUserId() {
         return userId;
@@ -102,6 +107,14 @@ public class User implements Serializable {
 
     public void setUserPwd(String userPwd) {
         this.userPwd = userPwd;
+    }
+
+    public String getChannelId() {
+        return channelId;
+    }
+
+    public void setChannelId(String channelId) {
+        this.channelId = channelId;
     }
 
 
