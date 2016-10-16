@@ -47,7 +47,8 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public String login(@RequestParam(value = "phoneNum") String phoneNum, @RequestParam(value = "userPwd") String userPwd) {
+    public String login(@RequestParam(value = "phoneNum") String phoneNum, @RequestParam(value = "userPwd") String userPwd,
+                        @RequestParam(value = "channelId") String channelId) {
         ResultData resultData = new ResultData();
         try {
 
@@ -60,6 +61,8 @@ public class UserController {
             resultData.setData(JSON.toJSON(user));
             //设置返回结果状态
             System.out.println("user："+JSON.toJSON(user));
+            userService.UpdateChannelId(channelId,user.getUserId());
+
             resultData.setStatus(ResultData.SUCCESS);
         } catch (AppRTException e) {
             resultData.setStatus(ResultData.ERROR);

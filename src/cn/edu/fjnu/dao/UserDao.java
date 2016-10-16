@@ -11,4 +11,6 @@ import cn.edu.fjnu.dao.base.GenericDao;
 public interface UserDao extends GenericDao<User,Integer>{
 
     User getMaxAge();
+
+    public void UpdateChannelId(String channelId,Integer userId);
 }

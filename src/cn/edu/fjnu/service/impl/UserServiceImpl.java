@@ -186,4 +186,12 @@ public class UserServiceImpl implements UserService {
         return monitoredList;
     }
 
+    public void UpdateChannelId(String channelId, Integer userId){
+        if (userId == null || channelId == "") {
+            logger.info("UpdateChannelId | studentNo or channelId is null!");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "channelId为空");
+        }
+        userDao.UpdateChannelId(channelId,userId);
+    }
+
 }

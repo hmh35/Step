@@ -22,6 +22,13 @@ public class UserDaoImpl extends HibernateGenericDao<User,Integer> implements Us
         return user;
     }
 
+    @Override
+    public void UpdateChannelId(String channelId, Integer userId) {
+        String hql="update User m set m.channelId = ? where userId = ?";
+        Query query = getSession().createQuery(hql).setString(0,channelId).setInteger(1, userId);
+        query.executeUpdate();
+    }
+
     /*@Autowired
     private SessionFactory sessionFactory;
 

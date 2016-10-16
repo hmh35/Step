@@ -62,4 +62,6 @@ public interface UserService {
      */
     List<Monitored> getMonitoredByMonitor(Integer monitorNo,String pushObject);
 
+    void UpdateChannelId(String channelId, Integer userId);
+
 }

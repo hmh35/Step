@@ -13,7 +13,6 @@ import java.util.Date;
 @Table(name = "t_user")
 public class User implements Serializable {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="USER_ID",updatable = false)
@@ -39,8 +38,6 @@ public class User implements Serializable {
 
     @Column(name = "UPDATE_TIME")
     private Date updateTime;
-
-
 
     @Column(name = "CHANNEL_ID")
     private String channelId;
