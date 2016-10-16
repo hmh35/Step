@@ -1,11 +1,13 @@
 package cn.edu.fjnu.controller;
 
 import cn.edu.fjnu.beans.Monitor;
+import cn.edu.fjnu.beans.Monitored;
 import cn.edu.fjnu.beans.User;
 import cn.edu.fjnu.beans.base.ResultData;
 import cn.edu.fjnu.common.AppExCode;
 import cn.edu.fjnu.exception.AppRTException;
 import cn.edu.fjnu.service.*;
+import cn.edu.fjnu.utils.Md5;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
@@ -69,6 +71,44 @@ public class UserController {
         return JSON.toJSONString(resultData, true);
 
     }
+
+
+
+    /**
+     * 注册
+     *
+     * @param
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/register", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String register(@RequestParam(value = "user") String user)
+    {
+        ResultData resultData = new ResultData();
+        try {
+            System.out.println("测试："+user);
+            User saveUser = JSON.parseObject(user, User.class);
+            System.out.println("111:"+saveUser);
+            String password = saveUser.getUserPwd().substring(saveUser.getUserPwd().length() - 6, saveUser.getUserPwd().length());
+            saveUser.setUserPwd(Md5.digest(password.getBytes()));
+            System.out.println("22:"+saveUser);
+
+            userService.saveUser(saveUser);
+            System.out.println("33:"+saveUser);
+            //注册成功后创建accesstoken
+            String as = loginLogService.createAccesstoken(saveUser.getPhoneNum());
+            //创建客户端配置
+            configService.createConfig(saveUser.getPhoneNum());
+            resultData.setStatus(ResultData.SUCCESS);
+        } catch (AppRTException e) {
+            resultData.setStatus(ResultData.ERROR);
+            resultData.setErrorCode(e.getCode());
+            resultData.setData(e.getMessage());
+            e.printStackTrace();
+        }
+        return JSON.toJSONString(resultData);
+    }
+
 
 
 }

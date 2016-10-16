@@ -30,7 +30,7 @@ public class UserDaoImpl extends HibernateGenericDao<User,Integer> implements Us
         return sessionFactory.getCurrentSession();
     }*/
 
-   /* @Override
+  /* @Override
     public void saveUser(User user) {
         *//*Session session = sessionFactory.openSession();
         session.save(user);*//*

@@ -3,10 +3,10 @@ package cn.edu.fjnu.controller;
 import cn.edu.fjnu.beans.Config;
 import cn.edu.fjnu.beans.Monitor;
 import cn.edu.fjnu.beans.Monitored;
-import cn.edu.fjnu.beans.TestData;
+//import cn.edu.fjnu.beans.TestData;
 import cn.edu.fjnu.beans.base.ResultData;
 import cn.edu.fjnu.dao.ConfigDao;
-import cn.edu.fjnu.dao.TestDataDao;
+//import cn.edu.fjnu.dao.TestDataDao;
 import cn.edu.fjnu.exception.AppRTException;
 import cn.edu.fjnu.service.ConfigService;
 import cn.edu.fjnu.service.MonitorService;
@@ -34,8 +34,8 @@ import java.util.Date;
 public class ConfigController {
 
     private Logger logger = LoggerFactory.getLogger(ConfigController.class);
-    @Resource
-    private TestDataDao testDataDao;
+   // @Resource
+    //private TestDataDao testDataDao;
 
     @Resource
     private ConfigService configService;
@@ -138,12 +138,12 @@ public class ConfigController {
         testData1.setWeight(60.00);*/
         /*String testdata=JSON.toJSONString(testData1, true);*/
         System.out.println("测试数据:"+testdata);
-        TestData testData = JSONObject.parseObject(testdata,TestData.class);
-        if(testData.getName()==""||testData.getSpeedRate()==""||testData.getSpeedRate()==null||testData.getName()==null)
-            return;
-        testData.setCreateTime(new Date());
-        testDataDao.save(testData);
-        System.out.println("保存成功");
+       // TestData testData = JSONObject.parseObject(testdata,TestData.class);
+     //   if(testData.getName()==""||testData.getSpeedRate()==""||testData.getSpeedRate()==null||testData.getName()==null)
+       //     return;
+      //  testData.setCreateTime(new Date());
+      //  testDataDao.save(testData);
+      //  System.out.println("保存成功");
     }
 
 }

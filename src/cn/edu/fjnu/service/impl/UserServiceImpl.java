@@ -1,5 +1,6 @@
 package cn.edu.fjnu.service.impl;
 
+import cn.edu.fjnu.beans.LoginLog;
 import cn.edu.fjnu.beans.Monitor;
 import cn.edu.fjnu.beans.Monitored;
 import cn.edu.fjnu.beans.User;
@@ -10,11 +11,13 @@ import cn.edu.fjnu.dao.base.Page;
 import cn.edu.fjnu.exception.AppRTException;
 import cn.edu.fjnu.service.LoginLogService;
 import cn.edu.fjnu.service.UserService;
+import cn.edu.fjnu.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -64,16 +67,17 @@ public class UserServiceImpl implements UserService {
                 || user.getPhoneNum() == ""
                 || user.getUserPwd() == null
                 || user.getUserPwd() == "") {
-            logger.info("saveMonitor | this monitor is null!");
-            throw new AppRTException(AppExCode.U_COMMON_ERROR, "监护人含必填注册项为空");
+            logger.info("save | this monitored is null!");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "含必填注册项为空");
         }
         User userTemp = userDao
-                .uniqueResult("userName", user.getPhoneNum());
-        if (userTemp != null) {
-            logger.info("saveMonitor | this monitor is exists!");
-            throw new AppRTException(AppExCode.U_IS_EXISTS, "该监护人用户已存在");
+                .uniqueResult("phoneNum",user.getPhoneNum());
+        if (userTemp!= null) {
+            logger.info("save | this monitored is exists!");
+            throw new AppRTException(AppExCode.U_IS_EXISTS, "用户已存在");
         }
-        userDao.save(user);
+        System.out.println("666");
+      userDao.saveOrUpdate(user);
     }
 
     @Override
@@ -129,6 +133,7 @@ public class UserServiceImpl implements UserService {
         monitor.setUpdateTime(new Date());
         monitorDao.update(monitor);
     }
+
     @Override
     public User getUserByAccesstoken(String accesstoken) {
         if(accesstoken == null || accesstoken == ""){
