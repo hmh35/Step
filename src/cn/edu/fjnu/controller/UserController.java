@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,13 +92,10 @@ public class UserController {
         try {
             System.out.println("测试："+user);
             User saveUser = JSON.parseObject(user, User.class);
-            System.out.println("111:"+saveUser);
             String password = saveUser.getUserPwd().substring(saveUser.getUserPwd().length() - 6, saveUser.getUserPwd().length());
             saveUser.setUserPwd(Md5.digest(password.getBytes()));
-            System.out.println("22:"+saveUser);
-
+            saveUser.setCreateTime(new Date());
             userService.saveUser(saveUser);
-            System.out.println("33:"+saveUser);
             //注册成功后创建accesstoken
             String as = loginLogService.createAccesstoken(saveUser.getPhoneNum());
             //创建客户端配置
