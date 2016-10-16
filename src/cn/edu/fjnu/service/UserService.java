@@ -48,19 +48,18 @@ public interface UserService {
      */
     User getUserByAccesstoken(String accesstoken);
 
-    /**
-     * 分页获取监护人手下的所有被监护人
-     * @param monitorNo
-     * @return
-     */
+
+
+
     List<Monitored> getAllMonitoredByMonitorByPage(Integer monitorNo, Page page);
 
-    /**
-     * 获取监护人手下的所有被监护人
-     * @param monitorNo
-     * @return
-     */
-    List<Monitored> getMonitoredByMonitor(Integer monitorNo,String pushObject);
+    List<User> getMonitoredByMonitor(Integer monitorNo,String pushObject);
+
+
+    /*
+    * 获取被监护人的所有监护人
+    * */
+    List<User> getMonitorByMonitoredNo(Integer monitorNo);
 
     void UpdateChannelId(String channelId, Integer userId);
 

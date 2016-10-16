@@ -2,6 +2,7 @@ package cn.edu.fjnu.service;
 
 import cn.edu.fjnu.beans.Activities;
 import cn.edu.fjnu.beans.Monitor;
+import cn.edu.fjnu.beans.User;
 import cn.edu.fjnu.dao.base.Page;
 
 import java.util.List;
@@ -52,8 +53,8 @@ public interface ActivitiesService {
     /**
      * 删除活动
      * @param activities
-     * @param monitor
+     * @param user
      */
-    void deleteActivities(Activities activities, Monitor monitor);
+    void deleteActivities(Activities activities, User user);
 
 }

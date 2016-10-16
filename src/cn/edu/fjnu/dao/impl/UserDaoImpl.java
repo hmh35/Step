@@ -6,6 +6,8 @@ import cn.edu.fjnu.dao.base.HibernateGenericDao;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @Author: linqiu
  * @Date: 2016/3/3 11:00
@@ -29,6 +31,28 @@ public class UserDaoImpl extends HibernateGenericDao<User,Integer> implements Us
         query.executeUpdate();
     }
 
+    @Override
+    public List getAllMonitoredByMonitor(Integer monitorNo, String pushObject) {
+        System.out.println("5555:"+pushObject);
+        String hql = "from User u where u.userId in (SELECT monitoredNo from  MonitoredAndMonitor where monitorNo=?)";
+        //String hql = "from user u,MonitoredAndMonitor m where u.userId = m.monitoredNo and monitorNo = ?";
+        Query query = getSession().createQuery(hql).setInteger(0,monitorNo);
+        return query.list();
+    }
+
+    @Override
+    public List getProperMonitoredByMonitor(Integer monitorNo, String pushObject) {
+        String hql = "from User u where u.userId in (SELECT monitoredNo from  MonitoredAndMonitor where monitorNo=? and relationShip=?)";
+        Query query = getSession().createQuery(hql).setInteger(0,monitorNo).setString(1,pushObject);
+        return query.list();
+    }
+
+    @Override
+    public List getMonitorByMonitoredNo(Integer monitoredNo) {
+        String hql = "from Monitor m where m.monitorNo in (SELECT monitorNo from  MonitoredAndMonitor where monitoredNo=?)";
+        Query query = getSession().createQuery(hql).setInteger(0,monitoredNo);
+        return query.list();
+    }
     /*@Autowired
     private SessionFactory sessionFactory;
 

@@ -2,6 +2,7 @@ package cn.edu.fjnu.service.impl;
 
 import cn.edu.fjnu.beans.Activities;
 import cn.edu.fjnu.beans.Monitor;
+import cn.edu.fjnu.beans.User;
 import cn.edu.fjnu.common.AppExCode;
 import cn.edu.fjnu.dao.ActivitiesDao;
 import cn.edu.fjnu.dao.base.Page;
@@ -75,6 +76,7 @@ public class ActivitiesServiceImpl implements ActivitiesService {
             throw new AppRTException(AppExCode.AC_PARA_NULL, "创建者编号为空，无法获得活动");
         }
         List<Activities> activitiesList;
+        System.out.println("调用监控端");
         if (isOnTime) {
             activitiesList = activitiesDao.getActivityByMonitor(creatorNo, isOnTime, page);
         } else {
@@ -94,6 +96,7 @@ public class ActivitiesServiceImpl implements ActivitiesService {
             throw new AppRTException(AppExCode.AC_PARA_NULL, "被监护人编号为空，无法获得活动");
         }
         List<Activities> activitiesList;
+        System.out.println("调用被监控端");
         if (isOnTime) {
             activitiesList = activitiesDao.getActivityByMonitoredOnTime(monitored, page);
         } else {
@@ -107,8 +110,8 @@ public class ActivitiesServiceImpl implements ActivitiesService {
     }
 
     @Override
-    public void deleteActivities(Activities activities , Monitor monitor) {
-        if (activities == null || monitor == null /*|| !(activities.getCreatorNo().equals(monitor.getMonitorNo().toString()))*/) {
+    public void deleteActivities(Activities activities,User user){
+        if (activities == null || user== null /*|| !(activities.getCreatorNo().equals(user.getUserNo().toString()))*/) {
             System.out.println("if 执行");
             logger.info("DeleteActivities || this activitiesNo is null");
             throw new AppRTException(AppExCode.AC_DELETE_ERROR, "删除活动失败");

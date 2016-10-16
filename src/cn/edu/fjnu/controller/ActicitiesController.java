@@ -3,6 +3,7 @@ package cn.edu.fjnu.controller;
 import cn.edu.fjnu.beans.Activities;
 import cn.edu.fjnu.beans.Monitor;
 import cn.edu.fjnu.beans.Monitored;
+import cn.edu.fjnu.beans.User;
 import cn.edu.fjnu.beans.base.ResultData;
 import cn.edu.fjnu.common.AppExCode;
 import cn.edu.fjnu.dao.base.Page;
@@ -10,6 +11,7 @@ import cn.edu.fjnu.exception.AppRTException;
 import cn.edu.fjnu.service.ActivitiesService;
 import cn.edu.fjnu.service.MonitorService;
 import cn.edu.fjnu.service.MonitoredService;
+import cn.edu.fjnu.service.UserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baidu.yun.push.exception.PushClientException;
@@ -46,9 +48,15 @@ public class ActicitiesController {
     @Resource
     private MonitorService monitorService;
 
+    @Resource
+    private UserService userService;
+
+    /*
+    * 创建活动
+    * */
     @ResponseBody
-    @RequestMapping(value = "/monitor/avtivities/saveorupdate", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public String saveActivities(@RequestParam(value = "actitivies") String activities,
+    @RequestMapping(value = "/user/activities/saveorupdate", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String saveActivities(@RequestParam(value = "activities") String activities,
                                  @RequestParam(value = "accesstoken") String accesstoken) {
         //输出测试
         System.out.println(activities);
@@ -56,17 +64,14 @@ public class ActicitiesController {
         try {
             //获取客户端数据校验
             Activities saveActivities = JSON.parseObject(activities, Activities.class);
-            Monitor monitor = monitorService.getMonitorByAccesstoken(accesstoken);
-            saveActivities.setCreatorNo(monitor.getMonitorNo().toString());
-            saveActivities.setCreateName(monitor.getRealName());
-
+            User user = userService.getUserByAccesstoken(accesstoken);
+            saveActivities.setCreatorNo(user.getUserId().toString());
+            saveActivities.setCreateName(user.getRealName());
             activitiesService.createActivity(saveActivities);
+            System.out.println(saveActivities);
             //获取所有被推送对象
-            List<Monitored> monitoredList = monitorService.getMonitoredByMonitor(monitor.getMonitorNo(),saveActivities.getPushObject());
+            List<User> monitoredList = userService.getMonitoredByMonitor(user.getUserId(),saveActivities.getPushObject());
             //进行推送
-            /**
-             * 测试推送对象
-             * */
             System.out.println("被推送对象："+monitoredList);
             cn.edu.fjnu.utils.BaiduPush.pushActivity(saveActivities, monitoredList);
             resultData.setStatus(ResultData.SUCCESS);
@@ -95,9 +100,11 @@ public class ActicitiesController {
         return JSON.toJSONString(resultData, true);
     }
 
-
+    /*
+    * 获取我关注的活动
+    * */
     @ResponseBody
-    @RequestMapping(value = "/monitor/avtivities/get", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/monitor/activities/get", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String getActivitiedByMonitor(@RequestParam(value = "accesstoken") String accesstoken,
                                          @RequestParam(value = "isOnTime") String isOnTime,
                                          @RequestParam(value = "page") String page) {
@@ -105,9 +112,8 @@ public class ActicitiesController {
         try {
             boolean timeType = JSONObject.parseObject(isOnTime, boolean.class);
             Page p = JSONObject.parseObject(page, Page.class);
-            Monitor monitor = monitorService.getMonitorByAccesstoken(accesstoken);
-            List<Activities> activitiesList = activitiesService
-                    .getALLActivitiesByMonitor(monitor.getMonitorNo().toString(), timeType, p);
+            User user = userService.getUserByAccesstoken(accesstoken);
+            List<Activities> activitiesList = activitiesService.getALLActivitiesByMonitor(user.getUserId().toString(), timeType, p);
             resultData.setData(JSON.toJSONString(activitiesList));
             resultData.setStatus(ResultData.SUCCESS);
         } catch (AppRTException e) {
@@ -120,18 +126,24 @@ public class ActicitiesController {
         return JSON.toJSONString(resultData, true);
     }
 
+    /*
+    * 获取我被关注的活动
+    * */
     @ResponseBody
-    @RequestMapping(value = "/monitored/avtivities/get", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/monitored/activities/get", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String getActivitiedByMonitored(@RequestParam(value = "accesstoken") String accesstoken,
                                            @RequestParam(value = "isOnTime") String isOnTime,
                                            @RequestParam(value = "page") String page) {
         ResultData resultData = new ResultData();
+        System.out.println(page);
         try {
             boolean timeType = JSONObject.parseObject(isOnTime, boolean.class);
             Page p = JSONObject.parseObject(page, Page.class);
-            Monitored monitored = monitoredService.getMonitoredByAccesstoken(accesstoken);
+            User user = userService.getUserByAccesstoken(accesstoken);
+            System.out.println(user.getUserId().toString());
             List<Activities> activitiesList = activitiesService
-                    .getAllActivitiesByMonitored(monitored.getMonitoredNo().toString(), timeType, p);
+                    .getAllActivitiesByMonitored(user.getUserId().toString(), timeType, p);
+            System.out.println(activitiesList);
             resultData.setData(JSON.toJSONString(activitiesList));
             resultData.setStatus(ResultData.SUCCESS);
         } catch (AppRTException e) {
@@ -143,17 +155,20 @@ public class ActicitiesController {
         return JSON.toJSONString(resultData, true);
     }
 
+    /*
+    * 删除我关注的活动
+    * */
     @ResponseBody
-    @RequestMapping(value = "/monitor/avtivities/delete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/monitor/activities/delete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String getActivitiedByMonitored(@RequestParam(value = "accesstoken") String accesstoken,
                                            @RequestParam(value = "activities") String activities) {
         ResultData resultData = new ResultData();
         try {
             System.out.println(activities);
             Activities act = JSONObject.parseObject(activities, Activities.class);
-            Monitor monitor = monitorService.getMonitorByAccesstoken(accesstoken);
+            User user = userService.getUserByAccesstoken(accesstoken);
             System.out.println("登录令牌："+accesstoken);
-            activitiesService.deleteActivities(act,monitor);
+            activitiesService.deleteActivities(act,user);
             resultData.setStatus(ResultData.SUCCESS);
         } catch (AppRTException e) {
             resultData.setStatus(ResultData.ERROR);
@@ -163,6 +178,4 @@ public class ActicitiesController {
         }
         return JSON.toJSONString(resultData, true);
     }
-
-
 }

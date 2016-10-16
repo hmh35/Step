@@ -143,7 +143,7 @@ public class UserServiceImpl implements UserService {
         //获取用户用户名
         String userName = loginLogService.checkAccesstoken(accesstoken);
         //通过用户名获取用户主键
-        User user = userDao.uniqueResult("userName", userName);
+        User user = userDao.uniqueResult("phoneNum", userName);
         if (user == null) {
             logger.info("getMonitroByAccesstoken | this monitor is not exists!");
             throw new AppRTException(AppExCode.U_IS_EXISTS, "被监护人用户不存在,无法获取用户信息");
@@ -151,7 +151,6 @@ public class UserServiceImpl implements UserService {
 
         return user;
     }
-
     @Override
     public List<Monitored> getAllMonitoredByMonitorByPage(Integer monitorNo, Page page) {
         if(monitorNo == null){
@@ -167,25 +166,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Monitored> getMonitoredByMonitor(Integer monitorNo,String pushObject) {
+    public List<User> getMonitoredByMonitor(Integer monitorNo, String pushObject) {
         if(monitorNo == null||pushObject==""){
             logger.info("getAllMonitoredByMonitor | monitorNo is null!");
             throw new AppRTException(AppExCode.U_NOT_FIND_MONITORED, "无法获取所有被监护人");
         }
-        List<Monitored> monitoredList;
+        List<User> monitoredList;
+        System.out.println("调用");
         if(pushObject.equals("所有人"))  //字符串判等要用equals，不能用==
         {
-            monitoredList = monitorDao.getAllMonitoredByMonitor(monitorNo,pushObject);
+            monitoredList = userDao.getAllMonitoredByMonitor(monitorNo,pushObject);
         }
         else
-            monitoredList=monitorDao.getProperMonitoredByMonitor(monitorNo,pushObject);
+            monitoredList=userDao.getProperMonitoredByMonitor(monitorNo,pushObject);
         if(monitoredList.size() == 0){
-            logger.info("getAllMonitoredByMonitor | monitoredList is null");
+            logger.info("getAllMonitoredByMonitor | monitoredList is null!");
             throw new AppRTException(AppExCode.U_NOT_FIND_MONITORED, "不存在对应的被监护人");
         }
         return monitoredList;
     }
 
+    @Override
+    public List<User> getMonitorByMonitoredNo(Integer monitoredNo) {
+        if(monitoredNo == null){
+            logger.info("userNo is null");
+            throw new AppRTException(AppExCode.MONITORED_AND_MONITOR_ERROR,"被监护人不存在");
+        }
+        List<User> monitorlist = userDao.getMonitorByMonitoredNo(monitoredNo);
+        return monitorlist;
+    }
+    @Override
     public void UpdateChannelId(String channelId, Integer userId){
         if (userId == null || channelId == "") {
             logger.info("UpdateChannelId | studentNo or channelId is null!");
@@ -193,5 +203,6 @@ public class UserServiceImpl implements UserService {
         }
         userDao.UpdateChannelId(channelId,userId);
     }
+
 
 }
