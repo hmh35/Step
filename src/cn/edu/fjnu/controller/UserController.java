@@ -24,11 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
-        * @Author: linqiu
-        * @Date: 2016/3/3 11:00
-        * @Description: UserController 测试类控制层
-        */
+
 @Controller
 @RequestMapping("/user")
 public class UserController {
