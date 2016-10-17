@@ -28,11 +28,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Date;
 
-/**
- * @Author: linqiu
- * @Date: 2016/3/9 12:29
- * @Description:
- */
+
 @Controller
 @RequestMapping(value = "activities")
 public class ActicitiesController {
