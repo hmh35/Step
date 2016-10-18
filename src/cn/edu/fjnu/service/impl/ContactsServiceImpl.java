@@ -45,7 +45,7 @@ public class ContactsServiceImpl implements ContactsService{
             throw new AppRTException(AppExCode.CON_PARA_NULL, "联系人信息已存在，无法新增");
         }
 
-        contactsDao.saveOrUpdate(contacts);
+        contactsDao.save(contacts);
     }
 
     @Override
@@ -84,5 +84,19 @@ public class ContactsServiceImpl implements ContactsService{
             throw new AppRTException(AppExCode.CON_PARA_NULL,"修改联系人参数错误，无法删除");
         }
         contactsDao.updateByMonitoredAndMonitor(monitoredNo,monitorNo,relationShip);
+    }
+
+    @Override
+    public void updateContacts(MonitoredAndMonitor contacts) {
+        if(contacts == null
+                || contacts.getMonitoredNo() == null || contacts.getMonitorPhone() == ""
+                || contacts.getMonitoredNo() == null || contacts.getMonitoredNo() == ""
+                || contacts.getRelationShip() == null || contacts.getRelationShip() == ""){
+            logger.info("createContacts | this contacts is error");
+            throw new AppRTException(AppExCode.CON_PARA_NULL,"联系人信息错误，无法修改");
+        }
+
+
+        contactsDao.update(contacts);
     }
 }

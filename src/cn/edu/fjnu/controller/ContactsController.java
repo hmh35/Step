@@ -40,7 +40,7 @@ public class ContactsController {
 
 
     @ResponseBody
-    @RequestMapping(value = "/monitored/saveorupdate", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/monitored/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String saveContacts(@RequestParam(value = "contact") String contact,
                                  @RequestParam(value = "accesstoken") String accesstoken) {
         ResultData resultData = new ResultData();
@@ -111,17 +111,24 @@ public class ContactsController {
 
     @ResponseBody
     @RequestMapping(value = "/monitored/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public String updateContacts(@RequestParam(value = "phoneNum") String phoneNum,
-                               @RequestParam(value = "accesstoken") String accesstoken,
-                                 @RequestParam(value = "relationShip") String relationShip) {
+    public String updateContacts(@RequestParam(value = "contact") String contact,
+                                 @RequestParam(value = "accesstoken") String accesstoken) {
         ResultData resultData = new ResultData();
         try {
             //获取客户端数据
-            User monitor=userService.getUserByPhoneNum(phoneNum);
+            MonitoredAndMonitor saveContacts = JSON.parseObject(contact, MonitoredAndMonitor.class);
+            //通过联系人的电话号码判断是不是以注册用
+
+            User monitor = userService.getUserByPhoneNum(saveContacts.getMonitorPhone());
+            if (monitor != null) {
+                saveContacts.setMonitorUserId(monitor.getUserId());
+            }
             User monitored = userService.getUserByAccesstoken(accesstoken);
-            contactsService.updateContactsByMonitoredAndMonitor(monitored.getUserId().toString(),monitor.getUserId().toString(),relationShip);
+            saveContacts.setMonitoredNo(monitored.getUserId().toString());
+            saveContacts.setUpdateTime(new Date());
+            contactsService.updateContacts(saveContacts);
             resultData.setStatus(ResultData.SUCCESS);
-        } catch (AppRTException e){
+        } catch (AppRTException e) {
             resultData.setStatus(ResultData.ERROR);
             resultData.setErrorCode(e.getCode());
             resultData.setData(e.getMessage());

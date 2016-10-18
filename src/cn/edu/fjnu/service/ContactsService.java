@@ -41,4 +41,6 @@ public interface ContactsService {
      */
     void updateContactsByMonitoredAndMonitor(String monitoredNo, String monitorNo,String relationShip);
 
+    void updateContacts(MonitoredAndMonitor contacts);
+
 }
