@@ -17,11 +17,11 @@ public class MonitoredAndMonitor {
     @Column(name = "mm_no")
     private Integer mmNo;
 
-    @Column(name = "monitored_no")
+    @Column(name = "monitored_user_id")
     private String monitoredNo;
 
-    @Column(name = "monitor_no")
-    private String monitorNo;
+    @Column(name = "monitor_phone")
+    private String monitorPhone;
 
     @Column(name = "create_time")
     private Date createTime;
@@ -31,6 +31,12 @@ public class MonitoredAndMonitor {
 
     @Column(name = "relation_ship")
     private String relationShip;
+
+    @Column(name = "monitor_user_id")
+    private Integer monitorUserId;
+
+    @Column(name = "monitor_name")
+    private String monitorName;
 
     public String getRelationShip() {
         return relationShip;
@@ -56,13 +62,7 @@ public class MonitoredAndMonitor {
         this.monitoredNo = monitoredNo;
     }
 
-    public String getMonitorNo() {
-        return monitorNo;
-    }
 
-    public void setMonitorNo(String monitorNo) {
-        this.monitorNo = monitorNo;
-    }
 
     public Date getCreateTime() {
         return createTime;
@@ -78,5 +78,29 @@ public class MonitoredAndMonitor {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getMonitorPhone() {
+        return monitorPhone;
+    }
+
+    public void setMonitorPhone(String monitorPhone) {
+        this.monitorPhone = monitorPhone;
+    }
+
+    public Integer getMonitorUserId() {
+        return monitorUserId;
+    }
+
+    public void setMonitorUserId(Integer monitorUserId) {
+        this.monitorUserId = monitorUserId;
+    }
+
+    public String getMonitorName() {
+        return monitorName;
+    }
+
+    public void setMonitorName(String monitorName) {
+        this.monitorName = monitorName;
     }
 }

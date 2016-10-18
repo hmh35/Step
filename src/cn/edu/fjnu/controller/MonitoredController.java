@@ -103,7 +103,7 @@ public class MonitoredController {
             configService.createConfig(saveMonitored.getStudentNo());
             Monitored afterSave = monitoredService.getMonitoredByAccesstoken(as);
             //创建监护人和被监护人关系
-            monitoredAndMonitorService.createMonitoredAndMonitor(afterSave.getMonitoredNo(),creator.getMonitorNo());
+            //monitoredAndMonitorService.createMonitoredAndMonitor(afterSave.getMonitoredNo(),creator.getMonitorNo());
             resultData.setStatus(ResultData.SUCCESS);
         } catch (AppRTException e) {
             resultData.setStatus(ResultData.ERROR);

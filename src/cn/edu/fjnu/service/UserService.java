@@ -48,7 +48,7 @@ public interface UserService {
      */
     User getUserByAccesstoken(String accesstoken);
 
-
+    User getUserByPhoneNum(String phoneNum);
 
 
     List<Monitored> getAllMonitoredByMonitorByPage(Integer monitorNo, Page page);

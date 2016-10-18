@@ -1,6 +1,7 @@
 package cn.edu.fjnu.service;
 
 import cn.edu.fjnu.beans.Contacts;
+import cn.edu.fjnu.beans.MonitoredAndMonitor;
 import cn.edu.fjnu.dao.base.Page;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface ContactsService {
      *
      * @param contacts
      */
-    void createContacts(Contacts contacts);
+    void createContacts(MonitoredAndMonitor contacts);
 
     /**
      * 通过用户No（主键）获取所有联系人
@@ -25,19 +26,19 @@ public interface ContactsService {
      * @param monitoredNo
      * @return
      */
-    List<Contacts> getAllContacts(String monitoredNo, Page page);
+    List<MonitoredAndMonitor> getAllContacts(String monitoredNo, Page page);
 
     /**
      * 通过用户No（主键）删除对应的联系人
      *
      * @param monitoredNo
      */
-    void deleteContactsByMonitored(String monitoredNo, Contacts contacts);
+    void deleteContactsByMonitoredAndMonitor(Integer monitoredUserId,MonitoredAndMonitor deleteContacts);
 
     /**
      * 更新联系人
      * @param contacts
      */
-    void updateContactByMonitored(Contacts contacts);
+    void updateContactsByMonitoredAndMonitor(String monitoredNo, String monitorNo,String relationShip);
 
 }

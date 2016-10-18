@@ -12,4 +12,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository(value = "monitoredAndMonitorDao")
 public class MonitoredAndMonitorDaoImpl extends HibernateGenericDao<MonitoredAndMonitor,Integer> implements MonitoredAndMonitorDao{
+
+
 }

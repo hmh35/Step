@@ -48,7 +48,7 @@ public class UserController {
                         @RequestParam(value = "channelId") String channelId) {
         ResultData resultData = new ResultData();
         try {
-
+            System.out.println("密码："+userPwd);
             User user = userService.login(phoneNum, userPwd);
             //登陆成功后返回加密后的登陆令牌
             resultData.setAccessToken(loginLogService.updateAccesstokenByUserNo(user.getPhoneNum()));

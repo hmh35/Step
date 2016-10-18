@@ -203,6 +203,17 @@ public class UserServiceImpl implements UserService {
         }
         userDao.UpdateChannelId(channelId,userId);
     }
+    @Override
+    public User getUserByPhoneNum(String phoneNum)
+    {
+        if(phoneNum==null||phoneNum==null)
+        {
+            logger.info("phoneNum is null!!");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "phoneNum为空");
+        }
+        User user=userDao.uniqueResult("phoneNum",phoneNum);
+        return user;
+    }
 
 
 }

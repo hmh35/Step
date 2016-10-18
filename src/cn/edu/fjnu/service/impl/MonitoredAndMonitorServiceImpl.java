@@ -20,7 +20,7 @@ import java.util.Date;
 @Service
 public class MonitoredAndMonitorServiceImpl implements MonitoredAndMonitorService{
 
-    private Logger logger = LoggerFactory.getLogger(MonitoredAndMonitorServiceImpl.class);
+   /* private Logger logger = LoggerFactory.getLogger(MonitoredAndMonitorServiceImpl.class);
 
     @Resource
     private MonitoredAndMonitorDao monitoredAndMonitorDao;
@@ -38,5 +38,5 @@ public class MonitoredAndMonitorServiceImpl implements MonitoredAndMonitorServic
         monitoredAndMonitor.setUpdateTime(new Date());
         monitoredAndMonitorDao.save(monitoredAndMonitor);
 
-    }
+    }*/
 }

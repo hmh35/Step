@@ -17,11 +17,7 @@ import net.sf.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @Author: linqiu
- * @Date: 2016/3/17 23:53
- * @Description: 推送工具类
- */
+
 public class BaiduPush {
 
     public static void pushActivity(Activities activities, List<User> monitoredList) throws PushClientException, PushServerException {

@@ -55,7 +55,7 @@ public class ActicitiesController {
     public String saveActivities(@RequestParam(value = "activities") String activities,
                                  @RequestParam(value = "accesstoken") String accesstoken) {
         //输出测试
-        System.out.println(activities);
+        System.out.println("测试创建活动:"+activities);
         ResultData resultData = new ResultData();
         try {
             //获取客户端数据校验
@@ -93,6 +93,7 @@ public class ActicitiesController {
             }
             e.printStackTrace();
         }
+        System.out.println("返回数据："+JSON.toJSONString(resultData, true));
         return JSON.toJSONString(resultData, true);
     }
 

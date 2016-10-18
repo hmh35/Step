@@ -7,5 +7,5 @@ package cn.edu.fjnu.service;
  */
 public interface MonitoredAndMonitorService {
 
-    void createMonitoredAndMonitor(Integer monitoredNo, Integer monitorNo);
+    /*void createMonitoredAndMonitor(Integer monitoredNo, Integer monitorNo);*/
 }
