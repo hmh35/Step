@@ -3,18 +3,25 @@ package cn.edu.fjnu.service.impl;
 import cn.edu.fjnu.beans.Activities;
 import cn.edu.fjnu.beans.Monitor;
 import cn.edu.fjnu.beans.User;
+import cn.edu.fjnu.beans.UserAndActivities;
 import cn.edu.fjnu.common.AppExCode;
 import cn.edu.fjnu.dao.ActivitiesDao;
+import cn.edu.fjnu.dao.UserAndActivitiesDao;
 import cn.edu.fjnu.dao.base.Page;
 import cn.edu.fjnu.exception.AppRTException;
 import cn.edu.fjnu.service.ActivitiesService;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.SystemEnvironmentPropertySource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.persistence.criteria.CriteriaBuilder;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -32,8 +39,7 @@ public class ActivitiesServiceImpl implements ActivitiesService {
     private ActivitiesDao activitiesDao;
 
     @Override
-    public void createActivity(Activities activities) {
-
+    public Activities createActivity(Activities activities) throws ParseException {
         if (activities == null
                 || activities.getCreatorNo() == null || activities.getCreatorNo() == ""
                 || activities.getActName() == null || activities.getActName() == ""
@@ -43,15 +49,27 @@ public class ActivitiesServiceImpl implements ActivitiesService {
             logger.info("createActivity | this activities is null");
             throw new AppRTException(AppExCode.AC_PARA_NULL, "活动数据出错，无法创建新活动");
         }
-        if(activities.getActNo()!=null)
-        {
-          activities.setUpdateTime(new Date());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if(activities.getActNo()!=null) {
+          //activities.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+            Date date = new Date();
+            String dt = sdf.format(date);
+            activities.setUpdateTime(date);
+            activities.setTimeLab(dt);
         }
-        else
-            activities.setCreateTime(new Date());
+        else {
+            Date date = new Date();
+            String dt = sdf.format(date);
+            System.out.println(dt);
+            activities.setCreateTime(date);
+            activities.setTimeLab(dt);
+            System.out.println(activities.getCreateTime());
+        }
         activities.setActStatus(Activities.ActStatus.VALID);
         //保存活动
         activitiesDao.saveOrUpdate(activities);
+        Activities activities1 = activitiesDao.getActivitiesByCCT(activities.getCreatorNo(),activities.getTimeLab());
+        return activities1;
     }
 
 
@@ -89,11 +107,12 @@ public class ActivitiesServiceImpl implements ActivitiesService {
         return activitiesList;
     }
 
+
     @Override
     public List<Activities> getAllActivitiesByMonitored(String monitored, boolean isOnTime, Page page) {
         if (monitored == null || monitored == "") {
             logger.info("getAllActivitiesByMonitored || this createNo is null");
-            throw new AppRTException(AppExCode.AC_PARA_NULL, "被监护人编号为空，无法获得活动");
+            throw new AppRTException(AppExCode.AC_PARA_NULL, "用户编号为空，无法获得活动");
         }
         List<Activities> activitiesList;
         System.out.println("调用被监控端");
@@ -118,7 +137,6 @@ public class ActivitiesServiceImpl implements ActivitiesService {
         }
         System.out.println("要删除的活动号："+activities.getActNo());
         activitiesDao.deleteById(activities.getActNo());
-
     }
     @Override
     public Activities getActivitiesById(Integer actNo)

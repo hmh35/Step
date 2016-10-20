@@ -2,7 +2,9 @@ package cn.edu.fjnu.dao;
 
 import cn.edu.fjnu.beans.Position;
 import cn.edu.fjnu.dao.base.GenericDao;
+import javafx.geometry.Pos;
 
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -20,5 +22,10 @@ public interface PositionDao extends GenericDao<Position,Integer>{
 
     List<Position> getAllNewestPosition(String monitorNo);
 
-    List<Position> getActivitiesObjectNewestPosition(String monitorNo,String pushObject);
+    List<Position> getActivitiesObjectNewestPosition(String monitorNo,Integer actNo);
+
+    /*
+    * 获取对象固定时间轨迹
+    * */
+    List<Position> getPositionRange(String monitoredNo,Date time);
 }

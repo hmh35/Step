@@ -31,4 +31,9 @@ public interface MonitorDao extends GenericDao<Monitor,Integer>{
      *
      * */
     List getProperMonitoredByMonitor(Integer monitorNo,String pushObject);
+
+    /*
+    * 更新channelId
+    * */
+    void UpdateChannelId(String channelId,Integer monitoredNo);
 }

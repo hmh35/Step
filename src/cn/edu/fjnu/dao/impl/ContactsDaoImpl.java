@@ -9,6 +9,8 @@ import cn.edu.fjnu.exception.AppRTException;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @Author: linqiu
  * @Date: 2016/3/9 18:57
@@ -41,5 +43,13 @@ public class ContactsDaoImpl extends HibernateGenericDao<MonitoredAndMonitor,Int
         else
             return false;
 
+    }
+
+
+    @Override
+    public List findProContacts(String userNo) {
+        String hql = "from MonitoredAndMonitor m where m.monitorUserId = ? and m.monitoredNo in (select userId from User)";
+        Query query = getSession().createQuery(hql).setString(0,userNo);
+        return query.list();
     }
 }

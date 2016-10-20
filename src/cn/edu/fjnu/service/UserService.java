@@ -3,6 +3,7 @@ package cn.edu.fjnu.service;
 import cn.edu.fjnu.beans.Monitor;
 import cn.edu.fjnu.beans.Monitored;
 import cn.edu.fjnu.beans.User;
+import cn.edu.fjnu.beans.UserAndActivities;
 import cn.edu.fjnu.dao.base.Page;
 
 import java.util.List;
@@ -19,14 +20,14 @@ public interface UserService {
     /**
      * 新增监护人
      *
-     * @param monitor
+     * @param user
      */
     void saveUser(User user);
 
     /**
      * 更新监护人信息
      *
-     * @param monitor
+     * @param user
      */
     void updateUser(User user);
 
@@ -48,19 +49,27 @@ public interface UserService {
      */
     User getUserByAccesstoken(String accesstoken);
 
-    User getUserByPhoneNum(String phoneNum);
-
-
+    /**
+     * 分页获取监护人手下的所有被监护人
+     * @param monitorNo
+     * @return
+     */
     List<Monitored> getAllMonitoredByMonitorByPage(Integer monitorNo, Page page);
 
-    List<User> getMonitoredByMonitor(Integer monitorNo,String pushObject);
-
+    /*
+    * 获取用户电话号码
+    * */
+    User getUserByPhoneNum(String phoneNum);
 
     /*
     * 获取被监护人的所有监护人
     * */
     List<User> getMonitorByMonitoredNo(Integer monitorNo);
 
-    void UpdateChannelId(String channelId, Integer userId);
+    /*
+    * 根据userId获取活动推送对象
+    * */
+    User getPushObjectByuserId(String userId);
 
+    void UpdateChannelId(String channelId, Integer userId);
 }

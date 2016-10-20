@@ -1,3 +1,4 @@
+/*
 package cn.edu.fjnu.tester;
 
 import cn.edu.fjnu.service.LoginLogService;
@@ -10,11 +11,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 
+*/
 /**
  * @Author: linqiu
  * @Date: 2016/3/5 20:40
  * @Description:
- */
+ *//*
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 public class LoginLogServiceTest {
@@ -39,3 +42,4 @@ public class LoginLogServiceTest {
     }
 
 }
+*/

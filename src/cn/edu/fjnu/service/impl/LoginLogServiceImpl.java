@@ -1,6 +1,7 @@
 package cn.edu.fjnu.service.impl;
 
 import cn.edu.fjnu.beans.LoginLog;
+import cn.edu.fjnu.beans.User;
 import cn.edu.fjnu.common.AppExCode;
 import cn.edu.fjnu.dao.LoginLogDao;
 import cn.edu.fjnu.exception.AppRTException;
@@ -95,7 +96,13 @@ public class LoginLogServiceImpl implements LoginLogService {
 
     @Override
     public String checkAccesstoken(String accesstoken) {
-        return getUserName(accesstoken);
+        if(accesstoken == null || accesstoken==""){
+            logger.info("checkAccesstoken | accesstoken is null");
+            throw  new AppRTException(AppExCode.A_CREATE_ERROR,"参数丢失，创建accesstoken错误");
+        }
+        LoginLog loginLog = loginLogDao.getLoginLog(accesstoken);
+        //return getUserName(accesstoken);
+        return loginLog.getUserName();
     }
 
     @Override

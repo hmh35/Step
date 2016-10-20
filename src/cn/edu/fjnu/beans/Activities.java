@@ -70,25 +70,22 @@ public class Activities {
     @Column(name = "act_range")
     private Integer actRange;
 
-    @Column(name = "push_Object")
-
-    //活动推送对象
-    private String pushObject;
-
-    public String getPushObject() {
-        return pushObject;
-    }
-
-    public void setPushObject(String pushObject) {
-        this.pushObject = pushObject;
-    }
-
-
+    @Column(name = "Time_Lab")
+    private  String TimeLab;
     // 状态
     public static class ActStatus {
         public static final int VALID = 0; // 可用
         public static final int INVALID = 1; // 禁用
     }
+
+    public String getTimeLab() {
+        return TimeLab;
+    }
+
+    public void setTimeLab(String TimeLab) {
+        this.TimeLab = TimeLab;
+    }
+
     public Integer getActRange() {
         return actRange;
     }

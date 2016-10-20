@@ -6,6 +6,7 @@ import cn.edu.fjnu.dao.base.HibernateGenericDao;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -19,7 +20,6 @@ public class PositionDaoImpl extends HibernateGenericDao<Position,Integer> imple
     @Override
     public Position getNewestPosition(String monitoredNo) {
         String hql = "from Position p where p.monitoredNo=:monitoredNo order by p.positionNo desc";
-
         Query query = getSession().createQuery(hql).setString("monitoredNo",monitoredNo);
         query.setFirstResult(0);
         query.setMaxResults(1);
@@ -35,7 +35,6 @@ public class PositionDaoImpl extends HibernateGenericDao<Position,Integer> imple
     }
 
     /**
-     * 该查询用的是sql语句查询，hql暂时没有找到好的查询办法
      * @param monitorNo
      * @return
      */
@@ -44,28 +43,34 @@ public class PositionDaoImpl extends HibernateGenericDao<Position,Integer> imple
         /*String hql = "select new cn.edu.Position(positionNo,monitoredNo,addrLong,addrLat,address,max(createTime))" +
                 " from Position where monitoredNo in " +
                 "(select monitoredNo from MonitoredAndMonitor where monitorNo=:monitorNo) group by monitoredNo order by createTime desc ";*/
-        String sql = "SELECT * FROM " +
+        /*String sql = "SELECT * FROM " +
                 "(SELECT * FROM t_position WHERE MONITORED_NO in " +
                 "(SELECT monitored_no from t_monitored_and_monitor where MONITOR_NO=?)" +
                 " ORDER BY CREATE_TIME DESC)" +
-                " as p GROUP BY p.monitored_no;";
-
-        //Query query = getSession().createQuery(hql).setString("monitorNo",monitorNo);
-        Query query = getSession().createSQLQuery(sql).addEntity(Position.class).setString(0,monitorNo);
+                " as p GROUP BY p.monitored_no;";*/
+        String hql = "from Position p where p.monitoredNo in (select m.monitoredNo from MonitoredAndMonitor m where m.monitorUserId = ?) and p.createTime in (select max(a.createTime) from Position a group by a.monitoredNo)";
+        Query query = getSession().createQuery(hql).setString(0,monitorNo);
+        //Query query = getSession().createSQLQuery(sql).addEntity(Position.class).setString(0,monitorNo);
         List<Position> positions = query.list();
         return positions;
     }
     @Override
-    public List<Position> getActivitiesObjectNewestPosition(String monitorNo,String pushObject)
+    public List<Position> getActivitiesObjectNewestPosition(String monitorNo,Integer actNo)
     {
-        System.out.println("推送对象："+pushObject);
-        String sql = "SELECT * FROM " +
+        System.out.println(monitorNo+"  "+actNo);
+        /*String sql = "SELECT * FROM " +
                 "(SELECT * FROM t_position WHERE MONITORED_NO in " +
                 "(SELECT monitored_no from t_monitored_and_monitor where (MONITOR_NO=? AND (relation_Ship='所有人' OR relation_Ship=?)))" +
                 " ORDER BY CREATE_TIME DESC)" +
-                " as p GROUP BY p.monitored_no;";
-        Query query = getSession().createSQLQuery(sql).addEntity(Position.class).setString(0,monitorNo).setString(1,pushObject);
-        List<Position> positions = query.list();
-        return positions;
+                " as p GROUP BY p.monitored_no;";*/
+        String hql = "from Position p where p.monitoredNo in (select u.monitoredNo from UserAndActivities u where u.creatorNo = ? and u.actNo = ?)";
+        Query query = getSession().createQuery(hql).setString(0,monitorNo).setInteger(1,actNo);
+        return query.list();
+    }
+
+    @Override
+    public List<Position> getPositionRange(String monitoredNo,Date time) {
+        String hql = "from Positon p where p.monitoredNo =? and p.createTime";
+        return null;
     }
 }

@@ -1,3 +1,4 @@
+/*
 package cn.edu.fjnu.tester;
 
 import cn.edu.fjnu.beans.Monitor;
@@ -17,11 +18,13 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
+*/
 /**
  * @Author: linqiu
  * @Date: 2016/3/6 19:34
  * @Description:
- */
+ *//*
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 public class MonitorServiceTest {
@@ -64,12 +67,15 @@ public class MonitorServiceTest {
         System.out.println(monitoreds.get(0).getStudentNo());
     }
 
-    /*@Test
+    */
+/*@Test
     public void testGetAllMonitoredBymonitor(){
         Monitor monitor = new Monitor();
         monitor.setMonitorNo(1);
         List<Monitored> monitoreds = monitorService.getAllMonitoredByMonitor(1);
         System.out.println(monitoreds.size());
         System.out.println(monitoreds.get(0).getStudentNo());
-    }*/
+    }*//*
+
 }
+*/

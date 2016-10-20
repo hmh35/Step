@@ -1,15 +1,9 @@
 package cn.edu.fjnu.controller;
 
-import cn.edu.fjnu.beans.Activities;
-import cn.edu.fjnu.beans.Monitor;
-import cn.edu.fjnu.beans.Monitored;
-import cn.edu.fjnu.beans.Position;
+import cn.edu.fjnu.beans.*;
 import cn.edu.fjnu.beans.base.ResultData;
 import cn.edu.fjnu.exception.AppRTException;
-import cn.edu.fjnu.service.ActivitiesService;
-import cn.edu.fjnu.service.MonitorService;
-import cn.edu.fjnu.service.MonitoredService;
-import cn.edu.fjnu.service.PositionService;
+import cn.edu.fjnu.service.*;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,7 +31,7 @@ public class PositionController {
     private PositionService positionService;
 
     @Resource
-    private MonitoredService monitoredService;
+    private UserService userService;
 
     @Resource
     private MonitorService monitorService;
@@ -47,7 +40,7 @@ public class PositionController {
     private ActivitiesService activitiesService;
 
     /**
-     * 保存地理位置
+     * 保存地理位置（完成）
      * @param position
      * @return
      */
@@ -55,13 +48,12 @@ public class PositionController {
     @RequestMapping(value = "/savePosition", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String savePosition(@RequestParam(value = "position") String position,
                                @RequestParam(value = "accesstoken") String accesstoken) {
-        Position savePosition = JSON.parseObject(position,Position.class);
+        Position saveposition = JSON.parseObject(position,Position.class);
         ResultData resultData = new ResultData();
         try {
-            Monitored monitored = monitoredService.getMonitoredByAccesstoken(accesstoken);
-            savePosition.setMonitoredNo(monitored.getMonitoredNo().toString());
-            savePosition.setCreateTime(new Date());
-            positionService.savePosition(savePosition);
+            User user = userService.getUserByAccesstoken(accesstoken);
+            saveposition.setMonitoredNo(user.getUserId().toString());
+            positionService.savePosition(saveposition);
             //进行安全预警
             resultData.setStatus(ResultData.SUCCESS);
         }catch (AppRTException e){
@@ -74,7 +66,7 @@ public class PositionController {
     }
 
     /**
-     * 获取某个被监护人最新地理位置
+     * 被监护人获取自己的最新地理位置（完成）
      * @param accesstoken
      * @return
      */
@@ -83,8 +75,8 @@ public class PositionController {
     public String getNewestPosition(@RequestParam(value = "accesstoken") String accesstoken) {
         ResultData resultData = new ResultData();
         try {
-            Monitored monitored = monitoredService.getMonitoredByAccesstoken(accesstoken);
-            Position position = positionService.getNewestPosition(monitored.getMonitoredNo().toString());
+            User user = userService.getUserByAccesstoken(accesstoken);
+            Position position = positionService.getNewestPosition(user.getUserId().toString());
             resultData.setData(JSON.toJSON(position));
             resultData.setStatus(ResultData.SUCCESS);
         }catch (AppRTException e){
@@ -96,22 +88,23 @@ public class PositionController {
         return JSON.toJSONString(resultData, true);
     }
     /**
-     * 获取活动参与人员最新的位置信息
+     * 获取活动参与人员最新的位置信息（完成）
      * @param accesstoken
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/monitor/newest/joinner", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String getAlljoinnerNewestPosition(@RequestParam(value = "accesstoken") String accesstoken,
-                                              @RequestParam(value = "actNo") String actNo) {
+                                              @RequestParam(value = "activities") String activities) {
         ResultData resultData = new ResultData();
         try{
            // System.out.println("活动号："+actNo);
-            Monitor monitor = monitorService.getMonitorByAccesstoken(accesstoken);
-            Activities activities=activitiesService.getActivitiesById(Integer.valueOf(actNo));
-            List<Position> positions = positionService.getActivitiesObjectNewestPosition(monitor.getMonitorNo().toString(),activities.getPushObject());
+            Activities searchactivities = JSON.parseObject(activities,Activities.class);
+            System.out.println(searchactivities.getActNo());
+            User user = userService.getUserByAccesstoken(accesstoken);
+            List<Position> positions = positionService.getActivitiesObjectNewestPosition(user.getUserId().toString(),searchactivities.getActNo());
+            System.out.println("参与者最新地理位置："+JSON.toJSONString(positions));//输出测试
             resultData.setData(JSON.toJSONString(positions));
-            System.out.println("所有参与者最新地理位置："+JSON.toJSONString(positions));//输出测试
             resultData.setStatus(ResultData.SUCCESS);
         }catch (AppRTException e){
             resultData.setStatus(ResultData.ERROR);
@@ -123,7 +116,7 @@ public class PositionController {
     }
 
     /**
-     * 获取监护人手下的所有被监护人最新地理位置
+     * 获取监护人手下的所有被监护人最新地理位置（完成）
      * @param accesstoken
      * @return
      */
@@ -132,8 +125,8 @@ public class PositionController {
     public String getAllNewestPosition(@RequestParam(value = "accesstoken") String accesstoken) {
         ResultData resultData = new ResultData();
         try{
-            Monitor monitor = monitorService.getMonitorByAccesstoken(accesstoken);
-            List<Position> positions = positionService.getNewestAll(monitor.getMonitorNo().toString());
+            User user = userService.getUserByAccesstoken(accesstoken);
+            List<Position> positions = positionService.getNewestAll(user.getUserId().toString());
             resultData.setData(JSON.toJSONString(positions));
             System.out.println("所有被监护人最新地理位置："+JSON.toJSONString(positions));//输出测试
             resultData.setStatus(ResultData.SUCCESS);
@@ -147,7 +140,7 @@ public class PositionController {
     }
 
     /**
-     * 获取获取被监护人的所有地理位置
+     * 获取被监护人的所有地理位置（完成）
      * @param monitoredNo
      * @return
      */
@@ -157,6 +150,7 @@ public class PositionController {
         ResultData resultData = new ResultData();
         try{
             List<Position> positions = positionService.getAllPosition(monitoredNo);
+            System.out.println(JSON.toJSONString(positions));
             resultData.setData(JSON.toJSONString(positions));
             resultData.setStatus(ResultData.SUCCESS);
         }catch (AppRTException e){
@@ -167,4 +161,26 @@ public class PositionController {
         }
         return JSON.toJSONString(resultData, true);
     }
+
+    /*
+    * 获取活动对象固定时间内的轨迹
+    * */
+/*    @ResponseBody
+    @RequestMapping(value = "/monitored/timePositon",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String getTimePostion(@RequestParam(value = "monitoredNo")String monitoredNo,
+                                 @RequestParam(value = "timeRange") String timeRange){
+        ResultData resultData = new ResultData();
+        try{
+            List<Position> positionsList = positionService.getPositionRange(monitoredNo,timeRange);
+            resultData.setData(JSON.toJSONString(positionsList));
+            resultData.setStatus(ResultData.SUCCESS);
+        }catch (AppRTException e){
+            resultData.setStatus(ResultData.ERROR);
+            resultData.setErrorCode(e.getCode());
+            resultData.setData(e.getMessage());
+            e.printStackTrace();
+        }
+        return JSON.toJSONString(resultData, true);
+    }*/
+
 }

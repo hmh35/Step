@@ -41,6 +41,9 @@ public class Monitor {
     @Column(name = "status")
     private Integer status;
 
+    @Column(name = "channel_id")
+    private String channelId;
+
     @Column(name = "access_right")
     private Integer accessRight;
 
@@ -67,6 +70,14 @@ public class Monitor {
         public static final int ADMIN = 0; //管理员
         public static final int TEACHER = 1; //教师
         public static final int PARENT = 2; //家长
+    }
+
+    public void setChannelId(String channelId) {
+        this.channelId = channelId;
+    }
+
+    public String getChannelId() {
+        return channelId;
     }
 
     public Integer getMonitorNo() {

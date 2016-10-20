@@ -1,9 +1,9 @@
 package cn.edu.fjnu.service.impl;
 
-import cn.edu.fjnu.beans.LoginLog;
 import cn.edu.fjnu.beans.Monitor;
 import cn.edu.fjnu.beans.Monitored;
 import cn.edu.fjnu.beans.User;
+import cn.edu.fjnu.beans.UserAndActivities;
 import cn.edu.fjnu.common.AppExCode;
 import cn.edu.fjnu.dao.MonitorDao;
 import cn.edu.fjnu.dao.UserDao;
@@ -11,13 +11,11 @@ import cn.edu.fjnu.dao.base.Page;
 import cn.edu.fjnu.exception.AppRTException;
 import cn.edu.fjnu.service.LoginLogService;
 import cn.edu.fjnu.service.UserService;
-import cn.edu.fjnu.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -67,17 +65,16 @@ public class UserServiceImpl implements UserService {
                 || user.getPhoneNum() == ""
                 || user.getUserPwd() == null
                 || user.getUserPwd() == "") {
-            logger.info("save | this monitored is null!");
-            throw new AppRTException(AppExCode.U_COMMON_ERROR, "含必填注册项为空");
+            logger.info("saveMonitor | this monitor is null!");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "监护人含必填注册项为空");
         }
         User userTemp = userDao
-                .uniqueResult("phoneNum",user.getPhoneNum());
-        if (userTemp!= null) {
-            logger.info("save | this monitored is exists!");
-            throw new AppRTException(AppExCode.U_IS_EXISTS, "用户已存在");
+                .uniqueResult("userName", user.getPhoneNum());
+        if (userTemp != null) {
+            logger.info("saveMonitor | this monitor is exists!");
+            throw new AppRTException(AppExCode.U_IS_EXISTS, "该监护人用户已存在");
         }
-        System.out.println("666");
-      userDao.saveOrUpdate(user);
+        userDao.save(user);
     }
 
     @Override
@@ -133,24 +130,25 @@ public class UserServiceImpl implements UserService {
         monitor.setUpdateTime(new Date());
         monitorDao.update(monitor);
     }
-
     @Override
     public User getUserByAccesstoken(String accesstoken) {
         if(accesstoken == null || accesstoken == ""){
-            logger.info("getMonitroByAccesstoken | accesstoken is null!");
-            throw new AppRTException(AppExCode.U_COMMON_ERROR, "被监护人用户accesstoken错误");
+            logger.info("getUserByAccesstoken | accesstoken is null!");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "用户accesstoken错误");
         }
         //获取用户用户名
         String userName = loginLogService.checkAccesstoken(accesstoken);
-        //通过用户名获取用户主键
+        System.out.println(userName);
+        //通过电话号码获取用户
         User user = userDao.uniqueResult("phoneNum", userName);
         if (user == null) {
-            logger.info("getMonitroByAccesstoken | this monitor is not exists!");
-            throw new AppRTException(AppExCode.U_IS_EXISTS, "被监护人用户不存在,无法获取用户信息");
+            logger.info("getUserByAccesstoken | this user is not exists!");
+            throw new AppRTException(AppExCode.U_IS_EXISTS, "该用户不存在,无法获取用户信息");
         }
 
         return user;
     }
+
     @Override
     public List<Monitored> getAllMonitoredByMonitorByPage(Integer monitorNo, Page page) {
         if(monitorNo == null){
@@ -165,15 +163,15 @@ public class UserServiceImpl implements UserService {
         return monitoredList;
     }
 
-    @Override
-    public List<User> getMonitoredByMonitor(Integer monitorNo, String pushObject) {
-        if(monitorNo == null||pushObject==""){
+/*    @Override
+    public List<User> getMonitoredByMonitor(Integer monitorNo,UserAndActivities userAndActivities) {
+        if(monitorNo == null){
             logger.info("getAllMonitoredByMonitor | monitorNo is null!");
-            throw new AppRTException(AppExCode.U_NOT_FIND_MONITORED, "无法获取所有被监护人");
+            throw new AppRTException(AppExCode.U_NOT_FIND_MONITORED, "无法获取相应的被监护人");
         }
         List<User> monitoredList;
-        System.out.println("调用");
-        if(pushObject.equals("所有人"))  //字符串判等要用equals，不能用==
+        System.out.println(userAndActivities);
+        if(userAndActivities.getMonitored_No())  //字符串判等要用equals，不能用==
         {
             monitoredList = userDao.getAllMonitoredByMonitor(monitorNo,pushObject);
         }
@@ -184,7 +182,7 @@ public class UserServiceImpl implements UserService {
             throw new AppRTException(AppExCode.U_NOT_FIND_MONITORED, "不存在对应的被监护人");
         }
         return monitoredList;
-    }
+    }*/
 
     @Override
     public List<User> getMonitorByMonitoredNo(Integer monitoredNo) {
@@ -195,14 +193,21 @@ public class UserServiceImpl implements UserService {
         List<User> monitorlist = userDao.getMonitorByMonitoredNo(monitoredNo);
         return monitorlist;
     }
+
     @Override
-    public void UpdateChannelId(String channelId, Integer userId){
-        if (userId == null || channelId == "") {
-            logger.info("UpdateChannelId | studentNo or channelId is null!");
-            throw new AppRTException(AppExCode.U_COMMON_ERROR, "channelId为空");
+    public User getPushObjectByuserId(String userId) {
+        if(userId == null || userId == "") {
+            logger.info("userId is null");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "该对象不存在");
         }
-        userDao.UpdateChannelId(channelId,userId);
+        User user = userDao.getUser(userId);
+        if(user == null){
+            logger.info("user is null");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR,"用户不存在");
+        }
+        return user;
     }
+
     @Override
     public User getUserByPhoneNum(String phoneNum)
     {
@@ -215,5 +220,13 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Override
+    public void UpdateChannelId(String channelId, Integer userId){
+        if (userId == null || channelId == "") {
+            logger.info("UpdateChannelId | studentNo or channelId is null!");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "channelId为空");
+        }
+        userDao.UpdateChannelId(channelId,userId);
+    }
 
 }

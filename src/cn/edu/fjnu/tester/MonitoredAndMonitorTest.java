@@ -1,3 +1,4 @@
+/*
 package cn.edu.fjnu.tester;
 
 import cn.edu.fjnu.service.MonitoredAndMonitorService;
@@ -10,11 +11,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 
+*/
 /**
  * @Author: linqiu
  * @Date: 2016/3/22 21:23
  * @Description:
- */
+ *//*
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 public class MonitoredAndMonitorTest {
@@ -28,3 +31,4 @@ public class MonitoredAndMonitorTest {
         monitoredAndMonitorService.createMonitoredAndMonitor(1,2);
     }
 }
+*/

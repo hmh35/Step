@@ -6,6 +6,8 @@ import cn.edu.fjnu.dao.base.HibernateGenericDao;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @Author: linqiu
  * @Date: 2016/3/4 10:43
@@ -20,5 +22,11 @@ import org.springframework.stereotype.Repository;
         String hql="update Monitored m set m.channelId = ? where monitoredNo = ?";
         Query query = getSession().createQuery(hql).setString(0,channelId).setInteger(1, monitoredNo);
         query.executeUpdate();
+    }
+    @Override
+    public List getMonitorByMonitoredNo(Integer monitoredNo) {
+        String hql = "from Monitor m where m.monitorNo in (SELECT monitorNo from  MonitoredAndMonitor where monitoredNo=?)";
+        Query query = getSession().createQuery(hql).setInteger(0,monitoredNo);
+        return query.list();
     }
 }

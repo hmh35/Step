@@ -23,7 +23,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import java.util.List;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/6 19:27
+ * @Description:
+ */
 @Controller
 @RequestMapping("/monitor")
 public class MonitorController {
@@ -51,7 +55,8 @@ public class MonitorController {
      */
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public String login(@RequestParam(value = "userName") String userName, @RequestParam(value = "userPwd") String userPwd) {
+    public String login(@RequestParam(value = "userName") String userName, @RequestParam(value = "userPwd") String userPwd,
+                        @RequestParam(value = "channelId") String channelId) {
             ResultData resultData = new ResultData();
         try {
             System.out.printf("账号："+userName+" "+"密码："+userPwd);
@@ -64,6 +69,8 @@ public class MonitorController {
             resultData.setData(JSON.toJSON(monitor));
             //设置返回结果状态
             resultData.setStatus(ResultData.SUCCESS);
+            //更新channelId
+            monitorService.UpdateChannelId(channelId,monitor.getMonitorNo());
         } catch (AppRTException e) {
             resultData.setStatus(ResultData.ERROR);
             resultData.setErrorCode(e.getCode());
@@ -77,6 +84,8 @@ public class MonitorController {
 
     /**
      * 监护人注册
+     * 1.要先验证手机号是否存在于数据库中
+     * 2.不存在允许注册，需要填写个人信息（账号、密码等）
      *
      * @param monitor
      * @return

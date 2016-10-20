@@ -56,6 +56,9 @@ public class MonitoredController {
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String login(@RequestParam(value = "studentNo") String studentNo, @RequestParam(value = "password") String password,
                         @RequestParam(value = "channelId") String channelId) {
+        System.out.println(studentNo);
+        System.out.println(password);
+        System.out.println(channelId);
         ResultData resultData = new ResultData();
         try {
             Monitored monitored = monitoredService.login(studentNo, password);
@@ -88,6 +91,15 @@ public class MonitoredController {
     @RequestMapping(value = "/register", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String register(@RequestParam(value = "monitored") String monitored,
                            @RequestParam(value = "accesstoken") String accesstoken) {
+    //@RequestMapping(value = "/register")
+    //public String register(){
+        /*Monitored saveMonitored = new Monitored();
+        saveMonitored.setStudentNo("12345678");
+        saveMonitored.setPassword("123456");
+        saveMonitored.setRealName("xianjing");
+        saveMonitored.setPhoneNumber("15392192712");
+        System.out.println(saveMonitored);*/
+        System.out.println(monitored);
 
         ResultData resultData = new ResultData();
         try {
@@ -95,7 +107,7 @@ public class MonitoredController {
             String password = saveMonitored.getStudentNo().substring(saveMonitored.getStudentNo().length() - 6, saveMonitored.getStudentNo().length());
             saveMonitored.setPassword(Md5.digest(password.getBytes()));
             saveMonitored.setStatus(Monitored.MonitoredStatus.VALID);
-            Monitor creator = monitorService.getMonitorByAccesstoken(accesstoken);
+            //Monitor creator = monitorService.getMonitorByAccesstoken(accesstoken);
             monitoredService.saveMonitored(saveMonitored);
             //注册成功后创建accesstoken
             String as = loginLogService.createAccesstoken(saveMonitored.getStudentNo());
@@ -111,7 +123,9 @@ public class MonitoredController {
             resultData.setData(e.getMessage());
             e.printStackTrace();
         }
-        return JSON.toJSONString(resultData);
+        //System.out.println(JSON.toJSONString(resultData,true));
+        //return JSON.toJSONString(resultData,true);
+        return "index.jsp";
     }
 
     /**
@@ -127,8 +141,11 @@ public class MonitoredController {
         ResultData resultData = new ResultData();
         try {
             Monitored saveMonitored = JSON.parseObject(monitored, Monitored.class);
-            Monitor creator = monitorService.getMonitorByAccesstoken(accesstoken);
-            monitoredService.updateMonitor(saveMonitored);
+            //Monitor creator = monitorService.getMonitorByAccesstoken(accesstoken);
+            String password = saveMonitored.getStudentNo().substring(saveMonitored.getStudentNo().length() - 6, saveMonitored.getStudentNo().length());
+            saveMonitored.setPassword(Md5.digest(password.getBytes()));
+            saveMonitored.setStatus(Monitored.MonitoredStatus.VALID);
+            monitoredService.updateMonitored(saveMonitored);
             resultData.setStatus(ResultData.SUCCESS);
         } catch (AppRTException e) {
             resultData.setStatus(ResultData.ERROR);
@@ -153,7 +170,7 @@ public class MonitoredController {
             //通过accesstoken获取
             Monitored mon = monitoredService.getMonitoredByAccesstoken(accesstoken);
             updateMonitored.setStudentNo(mon.getStudentNo());
-            monitoredService.updateMonitor(updateMonitored);
+            monitoredService.updateMonitored(updateMonitored);
             resultData.setStatus(ResultData.SUCCESS);
         } catch (AppRTException e) {
             resultData.setStatus(ResultData.ERROR);

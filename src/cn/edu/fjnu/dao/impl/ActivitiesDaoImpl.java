@@ -9,9 +9,15 @@ import org.hibernate.Query;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+
+import java.sql.Timestamp;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import org.hibernate.criterion.Order;
+
+import javax.annotation.Resource;
 
 /**
  * @Author: linqiu
@@ -23,29 +29,28 @@ public class ActivitiesDaoImpl extends HibernateGenericDao<Activities, Integer> 
 
     @Override
     public List getActivityByMonitoredOnTime(String monitoredNo, Page page) {
-        //String sql = "SELECT * from t_activities WHERE CREATOR_NO IN (SELECT MONITOR_NO FROM t_monitored_and_monitor WHERE MONITORED_NO=?);";
-        String hql = "from Activities m WHERE m.aplyUpplmt>=? AND (m.pushObject='所有人' OR m.pushObject IN(SELECT n.relationShip FROM MonitoredAndMonitor n WHERE n.monitoredNo=?) AND m.creatorNo IN (SELECT n.monitorNo FROM MonitoredAndMonitor n WHERE n.monitoredNo=?)) ";
-        Query query = getSession().createQuery(hql).setTimestamp(0, new Date()).setString(1, monitoredNo).setString(2, monitoredNo);
-
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        String hql = "from Activities WHERE aplyUpplmt>=? AND creatorNo IN (SELECT creatorNo FROM UserAndActivities WHERE monitoredNo=?) AND actNo IN (SELECT actNo FROM UserAndActivities where monitoredNo = ?)";
+        Query query = getSession().createQuery(hql).setTimestamp(0,time).setString(1, monitoredNo).setString(2,monitoredNo);
         //query.setResultTransformer(Transformers.aliasToBean(Activities.class));
         query.setFirstResult((page.getStartIndex()-1) * page.getPageSize());
         query.setMaxResults(page.getPageSize());
         List activitiesList = query.list();
-        System.out.println("执行 进行中的活动"+new Date());
         return activitiesList;
     }
 
     @Override
     public List getActivityByMonitoredOutTime(String monitoredNo, Page page) {
-        String hql = "from Activities m WHERE m.aplyUpplmt<? AND (m.pushObject='所有人' OR m.pushObject IN(SELECT relationShip FROM MonitoredAndMonitor WHERE monitoredNo=?) AND m.creatorNo IN (SELECT monitorNo FROM MonitoredAndMonitor WHERE monitoredNo=?)) ";
-        Query query = getSession().createQuery(hql).setTimestamp(0, new Date()).setString(1, monitoredNo).setString(2, monitoredNo);
+        System.out.println(monitoredNo);
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        String hql = "from Activities a WHERE a.aplyLowlmt<? AND a.creatorNo IN (SELECT u.creatorNo FROM UserAndActivities u WHERE u.monitoredNo=?) AND a.actNo IN (SELECT u.actNo FROM UserAndActivities u where u.monitoredNo = ?)";
+        Query query = getSession().createQuery(hql).setTimestamp(0, time).setString(1, monitoredNo).setString(2,monitoredNo);
         //query.setResultTransformer(Transformers.aliasToBean(Activities.class));
         System.out.println(query);
         query.setFirstResult((page.getStartIndex()-1) * page.getPageSize());
         query.setMaxResults(page.getPageSize());
         List activitiesList = query.list();
         System.out.println();
-        System.out.println("执行 过期活动");
         return activitiesList;
     }
 
@@ -65,6 +70,17 @@ public class ActivitiesDaoImpl extends HibernateGenericDao<Activities, Integer> 
         return criteria.list();
     }
 
-
+    @Override
+    public Activities getActivitiesByCCT(String creatorNo,String createTime){
+        System.out.println(createTime);
+        //String hql = "from Activities a where a.creatorNo = ? and a.createTime = '2016-10-17 16:40:28'";
+        String hql = "from Activities a where a.creatorNo = ? and a.TimeLab =  ?";
+        Query query = getSession().createQuery(hql).setString(0,creatorNo).setString(1,createTime);
+        query.setFirstResult(0);
+        query.setMaxResults(1);
+        Activities activities = (Activities) query.uniqueResult();
+        System.out.println(activities.getActNo());
+        return activities;
+    }
 
 }

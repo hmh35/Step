@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -34,27 +35,38 @@ public class PositionServiceImpl implements PositionService{
         positionDao.save(position);
     }
 
+    /*
+    * 获取最新位置
+    * */
     @Override
     public Position getNewestPosition(String monitoredNo) {
         return positionDao.getNewestPosition(monitoredNo);
     }
 
 
+    /*
+    * 获取监护人手下的所有被监护人最新地理位置
+    * */
     @Override
     public List<Position> getNewestAll(String monitorNo) {
         return positionDao.getAllNewestPosition(monitorNo);
     }
 
     @Override
-    public  List<Position> getActivitiesObjectNewestPosition(String monitorNo,String pushObject){
-        List<Position> positionList;
-        if(pushObject.equals("所有人")){
-         positionList=positionDao.getAllNewestPosition(monitorNo);
+    public  List<Position> getActivitiesObjectNewestPosition(String monitorNo,Integer actNo){
+        if(monitorNo == null || monitorNo == ""){
+            logger.info("monitorNo||monitorNo is null");
+            throw  new AppRTException(AppExCode.P_MONITORED_NOT_EXISTS,"对象不存在，无法获取位置信息");
         }
-        else
-          positionList=positionDao.getActivitiesObjectNewestPosition(monitorNo,pushObject);
+        if(actNo == null){
+            logger.info("actNo || actNo is null");
+            throw  new AppRTException(AppExCode.AC_NOT_FOUND,"不存在该监护人的活动");
+        }
+        List<Position> positionList;
+        positionList=positionDao.getActivitiesObjectNewestPosition(monitorNo,actNo);
         return positionList;
     }
+
     @Override
     public List<Position> getAllPosition(String monitoredNo) {
         if(monitoredNo == null || monitoredNo == ""){
@@ -67,5 +79,15 @@ public class PositionServiceImpl implements PositionService{
             throw new AppRTException(AppExCode.NOT_EXIST_POSITION,"不存在历史轨迹");
         }
         return positionList;
+    }
+
+    @Override
+    public List<Position> getPositionRange(String monitoredNo,Date time) {
+        if(monitoredNo == null || monitoredNo ==""){
+            logger.info("monitoredNo | monitoredNo is null");
+            throw new AppRTException(AppExCode.U_IS_EXISTS,"该用户不存在");
+        }
+        List<Position> positions = positionDao.getPositionRange(monitoredNo,time);
+        return positions;
     }
 }

@@ -16,6 +16,7 @@ public class AppExCode {
     public static final String U_IS_EXISTS = "U004";//用户已经存在
     public static final String U_NOT_AVAILABLE = "U005";//用户已禁用
     public static final String U_NOT_FIND_MONITORED="U006";//无法找到被监护人，和推送成败相关
+    public static final String U_NOT_FIND_MONITOR="U007";//无法找到被监护人，和推送成败相关
 
     //accesstoken错误码
     public static final String A_CREATE_ERROR = "A001";//accesstoken创建错误

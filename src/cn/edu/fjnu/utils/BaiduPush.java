@@ -1,6 +1,7 @@
 package cn.edu.fjnu.utils;
 
 import cn.edu.fjnu.beans.*;
+import cn.edu.fjnu.service.UserService;
 import com.baidu.yun.core.log.YunLogEvent;
 import com.baidu.yun.core.log.YunLogHandler;
 import com.baidu.yun.push.auth.PushKeyPair;
@@ -14,10 +15,15 @@ import com.baidu.yun.push.model.PushMsgToSingleDeviceRequest;
 import com.baidu.yun.push.model.PushMsgToSingleDeviceResponse;
 import net.sf.json.JSONObject;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/17 23:53
+ * @Description: 推送工具类
+ */
 public class BaiduPush {
 
     public static void pushActivity(Activities activities, List<User> monitoredList) throws PushClientException, PushServerException {

@@ -4,6 +4,8 @@ import cn.edu.fjnu.beans.Activities;
 import cn.edu.fjnu.dao.base.GenericDao;
 import cn.edu.fjnu.dao.base.Page;
 
+import java.security.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,4 +39,5 @@ public interface ActivitiesDao extends GenericDao<Activities, Integer> {
      */
     List getActivityByMonitor(String monitorNo, boolean isOnTime, Page page);
 
+    Activities getActivitiesByCCT(String creatorNo,String createDate);
 }

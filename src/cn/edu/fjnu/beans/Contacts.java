@@ -16,8 +16,8 @@ public class Contacts {
     @Column(name = "contact_no")
     private Integer contactNo;
 
-    @Column(name = "monitored_no")
-    private String monitoredNo;
+    @Column(name = "user_no")
+    private String userNo;
 
     @Column(name = "contact_name")
     private String contactName;
@@ -28,6 +28,9 @@ public class Contacts {
     @Column(name = "contact_relation")
     private String contactRelation;
 
+    //判断是否为紧急联系人
+    @Column(name = "is_emgcontact")
+    private String isEmgcontact;
     // 关系
     public static class Relation {
         public static final String TEACHER = "老师";
@@ -44,12 +47,12 @@ public class Contacts {
         this.contactNo = contactNo;
     }
 
-    public String getMonitoredNo() {
-        return monitoredNo;
+    public String getUserNo() {
+        return userNo;
     }
 
-    public void setMonitoredNo(String monitoredNo) {
-        this.monitoredNo = monitoredNo;
+    public void setUserNo(String userNo) {
+        this.userNo = userNo;
     }
 
     public String getContactName() {

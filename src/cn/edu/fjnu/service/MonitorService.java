@@ -3,6 +3,7 @@ package cn.edu.fjnu.service;
 import cn.edu.fjnu.beans.Monitor;
 import cn.edu.fjnu.beans.Monitored;
 import cn.edu.fjnu.dao.base.Page;
+import cn.edu.fjnu.beans.User;
 
 import java.util.List;
 
@@ -78,5 +79,10 @@ public interface MonitorService {
      * @param monitorNo
      * @return
      */
-    List<Monitored> getMonitoredByMonitor(Integer monitorNo,String pushObject);
+    List<User> getMonitoredByMonitor(Integer monitorNo,String pushObject);
+
+    /*
+    * 更新channelid
+    * */
+    void UpdateChannelId(String channelId, Integer monitorNo);
 }

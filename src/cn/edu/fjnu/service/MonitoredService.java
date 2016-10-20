@@ -1,6 +1,9 @@
 package cn.edu.fjnu.service;
 
+import cn.edu.fjnu.beans.Monitor;
 import cn.edu.fjnu.beans.Monitored;
+
+import java.util.List;
 
 /**
  * @Author: linqiu
@@ -31,7 +34,7 @@ public interface MonitoredService {
      *
      * @param monitored
      */
-    void updateMonitor(Monitored monitored);
+    void updateMonitored(Monitored monitored);
 
     /**
      * 修改密码
@@ -72,4 +75,9 @@ public interface MonitoredService {
     * 更新channelid
     * */
     void UpdateChannelId(String channelId, Integer monitoredNo);
+
+    /*
+    * 获取推送紧急求救的监护人
+    * */
+    List<Monitor> getMonitorByMonitoredNo(Integer monitoredNo);
 }

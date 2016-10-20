@@ -42,7 +42,7 @@ public class ContactsController {
     @ResponseBody
     @RequestMapping(value = "/monitored/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String saveContacts(@RequestParam(value = "contact") String contact,
-                                 @RequestParam(value = "accesstoken") String accesstoken) {
+                               @RequestParam(value = "accesstoken") String accesstoken) {
         ResultData resultData = new ResultData();
         try {
             //获取客户端数据
@@ -70,7 +70,7 @@ public class ContactsController {
 
 
     @ResponseBody
-    @RequestMapping(value = "/monitored/get", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/user/get", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String getAllContacts(@RequestParam(value = "accesstoken") String accesstoken,
                                  @RequestParam(value = "page") String page) {
         ResultData resultData = new ResultData();
@@ -129,6 +129,38 @@ public class ContactsController {
             contactsService.updateContacts(saveContacts);
             resultData.setStatus(ResultData.SUCCESS);
         } catch (AppRTException e) {
+            resultData.setStatus(ResultData.ERROR);
+            resultData.setErrorCode(e.getCode());
+            resultData.setData(e.getMessage());
+            e.printStackTrace();
+        }
+        return JSON.toJSONString(resultData, true);
+    }
+
+    /*
+    * 获取推送对象
+    * */
+    @ResponseBody
+    @RequestMapping(value = "/pushuser/get", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String getAllContacts(@RequestParam(value = "accesstoken") String accesstoken) {
+        ResultData resultData = new ResultData();
+        System.out.println(accesstoken);
+        try {
+            System.out.println(accesstoken);
+            User user = userService.getUserByAccesstoken(accesstoken);
+            if(user!=null) {
+                List<MonitoredAndMonitor> contactsList = contactsService.getProContacts(user.getUserId().toString());
+                System.out.println(contactsList);
+                resultData.setData(JSON.toJSONString(contactsList));
+                resultData.setStatus(ResultData.SUCCESS);
+            }
+            else{
+                List<MonitoredAndMonitor> contactsList = null;
+                resultData.setData(JSON.toJSONString(contactsList));
+                resultData.setStatus(ResultData.ERROR);
+            }
+
+        } catch (AppRTException e){
             resultData.setStatus(ResultData.ERROR);
             resultData.setErrorCode(e.getCode());
             resultData.setData(e.getMessage());

@@ -31,16 +31,16 @@ public interface ContactsService {
     /**
      * 通过用户No（主键）删除对应的联系人
      *
-     * @param monitoredNo
+     * @param monitoredUserId
      */
     void deleteContactsByMonitoredAndMonitor(Integer monitoredUserId,MonitoredAndMonitor deleteContacts);
 
     /**
      * 更新联系人
-     * @param contacts
      */
     void updateContactsByMonitoredAndMonitor(String monitoredNo, String monitorNo,String relationShip);
 
     void updateContacts(MonitoredAndMonitor contacts);
 
+    List<MonitoredAndMonitor> getProContacts(String userNo);
 }

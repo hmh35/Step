@@ -9,4 +9,5 @@ import cn.edu.fjnu.dao.base.GenericDao;
  * @Description: 登录日志dao
  */
 public interface LoginLogDao extends GenericDao<LoginLog,Integer>{
+    LoginLog getLoginLog(String accesstoken);
 }

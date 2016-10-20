@@ -53,7 +53,7 @@ public class UserController {
             //登陆成功后返回加密后的登陆令牌
             resultData.setAccessToken(loginLogService.updateAccesstokenByUserNo(user.getPhoneNum()));
             //返回用户客户端系统配置
-           // resultData.setConfig(JSON.toJSON(configService.getConfig(monitor.getUserName())));
+            // resultData.setConfig(JSON.toJSON(configService.getConfig(monitor.getUserName())));
             //返回用户信息
             resultData.setData(JSON.toJSON(user));
             //设置返回结果状态

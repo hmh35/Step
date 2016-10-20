@@ -1,5 +1,6 @@
 package cn.edu.fjnu.service.impl;
 
+import cn.edu.fjnu.beans.Monitor;
 import cn.edu.fjnu.beans.Monitored;
 import cn.edu.fjnu.common.AppExCode;
 import cn.edu.fjnu.dao.MonitoredDao;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: linqiu
@@ -74,7 +76,7 @@ public class MonitoredServiceImpl implements MonitoredService {
     }
 
     @Override
-    public void updateMonitor(Monitored monitored) {
+    public void updateMonitored(Monitored monitored) {
         if (monitored == null || monitored.getStudentNo() == null
                 || monitored.getStudentNo() == "") {
             logger.info("update | this monitored is null!");
@@ -215,5 +217,15 @@ public class MonitoredServiceImpl implements MonitoredService {
             throw new AppRTException(AppExCode.U_COMMON_ERROR, "channelId为空");
         }
         monitoredDao.UpdateChannelId(channelId,monitoredNo);
+    }
+
+    @Override
+    public List<Monitor> getMonitorByMonitoredNo(Integer monitoredNo) {
+        if(monitoredNo == null){
+            logger.info("monitorNo is null");
+            throw new AppRTException(AppExCode.MONITORED_AND_MONITOR_ERROR,"被监护人不存在");
+        }
+        List<Monitor> monitorlist = monitoredDao.getMonitorByMonitoredNo(monitoredNo);
+        return monitorlist;
     }
 }

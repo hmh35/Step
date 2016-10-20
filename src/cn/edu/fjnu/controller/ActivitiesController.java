@@ -1,18 +1,13 @@
 package cn.edu.fjnu.controller;
 
-import cn.edu.fjnu.beans.Activities;
-import cn.edu.fjnu.beans.Monitor;
-import cn.edu.fjnu.beans.Monitored;
-import cn.edu.fjnu.beans.User;
+import cn.edu.fjnu.beans.*;
 import cn.edu.fjnu.beans.base.ResultData;
 import cn.edu.fjnu.common.AppExCode;
 import cn.edu.fjnu.dao.base.Page;
 import cn.edu.fjnu.exception.AppRTException;
-import cn.edu.fjnu.service.ActivitiesService;
-import cn.edu.fjnu.service.MonitorService;
-import cn.edu.fjnu.service.MonitoredService;
-import cn.edu.fjnu.service.UserService;
+import cn.edu.fjnu.service.*;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baidu.yun.push.exception.PushClientException;
 import com.baidu.yun.push.exception.PushServerException;
@@ -25,13 +20,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.util.List;
+import javax.annotation.Resources;
+import java.text.ParseException;
+import java.util.ArrayList;
+
 import java.util.Date;
+import java.util.List;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/9 12:29
+ * @Description:
+ */
 @Controller
 @RequestMapping(value = "activities")
-public class ActicitiesController {
+public class ActivitiesController {
 
     private Logger logger = LoggerFactory.getLogger(MonitorController.class);
 
@@ -47,26 +50,41 @@ public class ActicitiesController {
     @Resource
     private UserService userService;
 
+    @Resource
+    private UserAndActivitiesService userAndActivitiesService;
+
+    @Resource
+    private MonitoredAndMonitorService monitoredAndMonitorService;
+
     /*
     * 创建活动
     * */
     @ResponseBody
     @RequestMapping(value = "/user/activities/saveorupdate", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String saveActivities(@RequestParam(value = "activities") String activities,
-                                 @RequestParam(value = "accesstoken") String accesstoken) {
+                                 @RequestParam(value = "accesstoken") String accesstoken,
+                                 @RequestParam(value = "monitoredandmonitor") String monitoredandmonitor) {
         //输出测试
-        System.out.println("测试创建活动:"+activities);
+        System.out.println(activities);
         ResultData resultData = new ResultData();
         try {
             //获取客户端数据校验
             Activities saveActivities = JSON.parseObject(activities, Activities.class);
+            System.out.println(monitoredandmonitor);
+            List<MonitoredAndMonitor> monitoredNolist = JSON.parseArray(monitoredandmonitor,MonitoredAndMonitor.class);
             User user = userService.getUserByAccesstoken(accesstoken);
             saveActivities.setCreatorNo(user.getUserId().toString());
             saveActivities.setCreateName(user.getRealName());
-            activitiesService.createActivity(saveActivities);
+            System.out.println(user.getUserId());
+            Activities getactivities = activitiesService.createActivity(saveActivities);
+            //获取所有被推送对象   未处理用户Id不存在的情况
+            //List<User> monitoredList = userService.getMonitoredByMonitor(monitoredNolist);
+            List<User> monitoredList=new ArrayList<User>();
+            for(int i = 0;i<monitoredNolist.size();i++) {
+                userAndActivitiesService.saveAct(getactivities, monitoredNolist.get(i).getMonitoredNo().toString());
+                monitoredList.add(userService.getPushObjectByuserId(monitoredNolist.get(i).getMonitoredNo().toString()));
+            }
             System.out.println(saveActivities);
-            //获取所有被推送对象
-            List<User> monitoredList = userService.getMonitoredByMonitor(user.getUserId(),saveActivities.getPushObject());
             //进行推送
             System.out.println("被推送对象："+monitoredList);
             cn.edu.fjnu.utils.BaiduPush.pushActivity(saveActivities, monitoredList);
@@ -92,8 +110,9 @@ public class ActicitiesController {
                 resultData.setData(e.getMessage());
             }
             e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        System.out.println("返回数据："+JSON.toJSONString(resultData, true));
         return JSON.toJSONString(resultData, true);
     }
 
@@ -166,6 +185,7 @@ public class ActicitiesController {
             User user = userService.getUserByAccesstoken(accesstoken);
             System.out.println("登录令牌："+accesstoken);
             activitiesService.deleteActivities(act,user);
+            userAndActivitiesService.deleteAct(act.getActNo());
             resultData.setStatus(ResultData.SUCCESS);
         } catch (AppRTException e) {
             resultData.setStatus(ResultData.ERROR);

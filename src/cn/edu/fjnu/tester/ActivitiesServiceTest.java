@@ -1,3 +1,4 @@
+/*
 package cn.edu.fjnu.tester;
 
 import cn.edu.fjnu.beans.Activities;
@@ -15,11 +16,13 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
+*/
 /**
  * @Author: linqiu
  * @Date: 2016/3/8 23:03
  * @Description:
- */
+ *//*
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 public class ActivitiesServiceTest {
@@ -80,3 +83,4 @@ public class ActivitiesServiceTest {
         System.out.println(((Activities)activitiesList.get(0)).getAddress());
     }
 }
+*/

@@ -2,8 +2,10 @@ package cn.edu.fjnu.service.impl;
 
 import cn.edu.fjnu.beans.Monitor;
 import cn.edu.fjnu.beans.Monitored;
+import cn.edu.fjnu.beans.User;
 import cn.edu.fjnu.common.AppExCode;
 import cn.edu.fjnu.dao.MonitorDao;
+import cn.edu.fjnu.dao.UserDao;
 import cn.edu.fjnu.dao.base.Page;
 import cn.edu.fjnu.exception.AppRTException;
 import cn.edu.fjnu.service.LoginLogService;
@@ -30,6 +32,9 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Resource
     private LoginLogService loginLogService;
+
+    @Resource
+    private UserDao userDao;
 
     @Override
     public Monitor login(String userName, String password) {
@@ -202,15 +207,15 @@ public class MonitorServiceImpl implements MonitorService {
     }
 
     @Override
-    public List<Monitored> getMonitoredByMonitor(Integer monitorNo,String pushObject) {
+    public List<User> getMonitoredByMonitor(Integer monitorNo, String pushObject) {
         if(monitorNo == null||pushObject==""){
             logger.info("getAllMonitoredByMonitor | monitorNo is null!");
             throw new AppRTException(AppExCode.U_NOT_FIND_MONITORED, "无法获取所有被监护人");
         }
-        List<Monitored> monitoredList;
+        List<User> monitoredList;
         if(pushObject.equals("所有人"))  //字符串判等要用equals，不能用==
         {
-            monitoredList = monitorDao.getAllMonitoredByMonitor(monitorNo,pushObject);
+            monitoredList = userDao.getAllMonitoredByMonitor(monitorNo,pushObject);
         }
         else
             monitoredList=monitorDao.getProperMonitoredByMonitor(monitorNo,pushObject);
@@ -219,5 +224,14 @@ public class MonitorServiceImpl implements MonitorService {
             throw new AppRTException(AppExCode.U_NOT_FIND_MONITORED, "不存在对应的被监护人");
         }
         return monitoredList;
+    }
+
+    @Override
+    public void UpdateChannelId(String channelId, Integer monitorNo) {
+        if (monitorNo == null || channelId == "") {
+            logger.info("UpdateChannelId | studentNo or channelId is null!");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "channelId为空");
+        }
+        monitorDao.UpdateChannelId(channelId,monitorNo);
     }
 }

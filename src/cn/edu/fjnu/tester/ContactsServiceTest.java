@@ -1,3 +1,4 @@
+/*
 package cn.edu.fjnu.tester;
 
 import cn.edu.fjnu.beans.Contacts;
@@ -13,11 +14,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.annotation.Resource;
 import java.util.List;
 
+*/
 /**
  * @Author: linqiu
  * @Date: 2016/3/9 20:26
  * @Description:
- */
+ *//*
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 public class ContactsServiceTest {
@@ -52,3 +55,4 @@ public class ContactsServiceTest {
         //contactsService.deleteContactsByMonitored("29");
     }
 }
+*/

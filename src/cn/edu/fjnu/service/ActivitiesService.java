@@ -5,6 +5,7 @@ import cn.edu.fjnu.beans.Monitor;
 import cn.edu.fjnu.beans.User;
 import cn.edu.fjnu.dao.base.Page;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -19,11 +20,11 @@ public interface ActivitiesService {
      *
      * @param activities
      */
-    void createActivity(Activities activities);
+    Activities createActivity(Activities activities) throws ParseException;
 
 
 
-   Activities getActivitiesById(Integer actNo);
+    Activities getActivitiesById(Integer actNo);
     /**
      * 通过创建者No获取活动
      *

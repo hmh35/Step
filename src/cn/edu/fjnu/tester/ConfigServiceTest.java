@@ -1,3 +1,4 @@
+/*
 package cn.edu.fjnu.tester;
 
 import cn.edu.fjnu.beans.Config;
@@ -11,11 +12,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 
+*/
 /**
  * @Author: linqiu
  * @Date: 2016/3/6 9:47
  * @Description:
- */
+ *//*
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 public class ConfigServiceTest {
@@ -37,13 +40,16 @@ public class ConfigServiceTest {
         configService.createConfig("duchengyu");
     }
 
-    /*@Test
+    */
+/*@Test
     public void testUpdateConfig() {
         Config config = new Config();
         config.setUserName("123012012130");
         //config.setConfNo(444);
         config.setIsMonitored(Config.IsMonitored.VALID);
         configService.updateConfig(config);
-    }*/
+    }*//*
+
 
 }
+*/

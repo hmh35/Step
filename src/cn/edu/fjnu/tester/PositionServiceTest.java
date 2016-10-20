@@ -1,3 +1,4 @@
+/*
 package cn.edu.fjnu.tester;
 
 import cn.edu.fjnu.beans.Position;
@@ -14,11 +15,13 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
+*/
 /**
  * @Author: linqiu
  * @Date: 2016/3/6 23:21
  * @Description:
- */
+ *//*
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 public class PositionServiceTest {
@@ -73,3 +76,4 @@ public class PositionServiceTest {
 
 
 }
+*/

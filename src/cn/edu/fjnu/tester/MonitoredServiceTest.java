@@ -1,3 +1,4 @@
+/*
 package cn.edu.fjnu.tester;
 
 import cn.edu.fjnu.beans.Monitored;
@@ -17,11 +18,13 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Date;
 
+*/
 /**
  * @Author: linqiu
  * @Date: 2016/3/4 21:25
  * @Description:
- */
+ *//*
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 public class MonitoredServiceTest {
@@ -115,3 +118,4 @@ public class MonitoredServiceTest {
         }
     }
 }
+*/

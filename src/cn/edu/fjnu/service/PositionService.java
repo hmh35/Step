@@ -2,6 +2,7 @@ package cn.edu.fjnu.service;
 
 import cn.edu.fjnu.beans.Position;
 
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -41,5 +42,14 @@ public interface PositionService {
      */
     List<Position> getAllPosition(String monitoredNo);
 
-    List<Position> getActivitiesObjectNewestPosition(String monitorNo,String pushObject);
+
+    /*
+    * 获取活动对象的位置
+    * */
+    List<Position> getActivitiesObjectNewestPosition(String monitorNo,Integer actNo);
+
+    /*
+    * 获取对象的固定时间轨迹
+    * */
+    List<Position> getPositionRange(String monitoredNo,Date time);
 }
