@@ -4,9 +4,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.*;
 
-/**
- * Created by Administrator on 2016/10/16.
- */
 @Entity
 @Table(name = "t_user_and_activities")
 public class UserAndActivities {

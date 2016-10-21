@@ -23,11 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.xml.transform.Result;
 
-/**
- * @Author: linqiu
- * @Date: 2016/3/9 18:32
- * @Description:
- */
+
 @Controller
 @RequestMapping(value = "/config")
 public class ConfigController {

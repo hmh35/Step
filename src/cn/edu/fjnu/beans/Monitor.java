@@ -3,11 +3,7 @@ package cn.edu.fjnu.beans;
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * @Author: linqiu
- * @Date: 2016/3/3 12:23
- * @Description: 监护人
- */
+
 @Entity
 @Table(name = "t_monitor")
 public class Monitor {

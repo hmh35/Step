@@ -4,11 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @Author: linqiu
- * @Date: 2016/3/3 14:54
- * @Description: 泛型数据库操作接口
- */
+
 public interface GenericDao<T, ID extends Serializable> {
     /**
      * <p>

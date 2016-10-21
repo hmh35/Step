@@ -9,11 +9,7 @@ import cn.edu.fjnu.exception.AppRTException;
 
 import java.util.List;
 
-/**
- * @Author: linqiu
- * @Date: 2016/3/22 21:06
- * @Description:
- */
+
 public interface MonitoredAndMonitorDao extends GenericDao<MonitoredAndMonitor,Integer>{
 
 }

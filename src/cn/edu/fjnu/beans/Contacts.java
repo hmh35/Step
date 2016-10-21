@@ -2,11 +2,7 @@ package cn.edu.fjnu.beans;
 
 import javax.persistence.*;
 
-/**
- * @Author: linqiu
- * @Date: 2016/3/3 13:05
- * @Description: 被监护人联系人表
- */
+
 @Entity
 @Table(name = "t_contacts")
 public class Contacts {

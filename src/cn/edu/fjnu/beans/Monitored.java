@@ -4,11 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @Author: linqiu
- * @Date: 2016/3/3 11:10
- * @Description: 被监护人
- */
+
 @Entity
 @Table(name = "t_monitored")
 public class Monitored implements Serializable {

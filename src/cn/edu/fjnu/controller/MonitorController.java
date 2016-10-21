@@ -23,11 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import java.util.List;
 
-/**
- * @Author: linqiu
- * @Date: 2016/3/6 19:27
- * @Description:
- */
+
 @Controller
 @RequestMapping("/monitor")
 public class MonitorController {

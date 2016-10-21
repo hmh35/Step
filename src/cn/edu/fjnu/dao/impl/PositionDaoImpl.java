@@ -9,11 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Date;
 import java.util.List;
 
-/**
- * @Author: linqiu
- * @Date: 2016/3/6 22:55
- * @Description:
- */
+
 @Repository(value = "positionDao")
 public class PositionDaoImpl extends HibernateGenericDao<Position,Integer> implements PositionDao{
 

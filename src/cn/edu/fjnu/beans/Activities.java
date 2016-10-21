@@ -3,11 +3,7 @@ package cn.edu.fjnu.beans;
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * @Author: linqiu
- * @Date: 2016/3/3 12:34
- * @Description: 活动
- */
+
 @Entity
 @Table(name = "t_activities")
 public class Activities {

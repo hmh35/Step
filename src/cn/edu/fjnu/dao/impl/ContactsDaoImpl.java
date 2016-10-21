@@ -11,11 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * @Author: linqiu
- * @Date: 2016/3/9 18:57
- * @Description:
- */
+
 @Repository(value = "contactsDao")
 public class ContactsDaoImpl extends HibernateGenericDao<MonitoredAndMonitor,Integer> implements ContactsDao {
 

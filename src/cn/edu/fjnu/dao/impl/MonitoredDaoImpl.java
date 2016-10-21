@@ -8,11 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * @Author: linqiu
- * @Date: 2016/3/4 10:43
- * @Description:
- */
+
 @Repository(value = "monitoredDao")
    public class MonitoredDaoImpl extends HibernateGenericDao<Monitored,Integer> implements MonitoredDao{
 

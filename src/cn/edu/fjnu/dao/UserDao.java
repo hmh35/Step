@@ -6,11 +6,7 @@ import org.hibernate.Query;
 
 import java.util.List;
 
-/**
- * @Author: linqiu
- * @Date: 2016/3/3 11:00
- * @Description: user测试类Dao接口层
- */
+
 public interface UserDao extends GenericDao<User,Integer>{
 
     User getMaxAge();
