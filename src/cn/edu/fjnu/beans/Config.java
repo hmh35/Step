@@ -2,7 +2,11 @@ package cn.edu.fjnu.beans;
 
 import javax.persistence.*;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/3 12:48
+ * @Description: 客户端配置
+ */
 @Entity
 @Table(name = "t_config")
 public class Config {

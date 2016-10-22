@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/8 15:00
+ * @Description:
+ */
 @Controller
 @RequestMapping("/position")
 public class PositionController {

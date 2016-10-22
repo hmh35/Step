@@ -7,7 +7,11 @@ import cn.edu.fjnu.dao.base.GenericDao;
 
 import java.util.List;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/9 18:56
+ * @Description:
+ */
 public interface ContactsDao extends GenericDao<MonitoredAndMonitor,Integer>{
 
     /**

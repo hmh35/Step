@@ -27,7 +27,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/9 12:29
+ * @Description:
+ */
 @Controller
 @RequestMapping(value = "activities")
 public class ActivitiesController {
@@ -77,8 +81,8 @@ public class ActivitiesController {
             //List<User> monitoredList = userService.getMonitoredByMonitor(monitoredNolist);
             List<User> monitoredList=new ArrayList<User>();
             for(int i = 0;i<monitoredNolist.size();i++) {
-                userAndActivitiesService.saveAct(getactivities, monitoredNolist.get(i).getMonitoredNo().toString());
-                monitoredList.add(userService.getPushObjectByuserId(monitoredNolist.get(i).getMonitoredNo().toString()));
+                userAndActivitiesService.saveAct(getactivities, monitoredNolist.get(i).getMonitorUserId().toString());
+                monitoredList.add(userService.getPushObjectByuserId(monitoredNolist.get(i).getMonitorUserId().toString()));
             }
             System.out.println(saveActivities);
             //进行推送

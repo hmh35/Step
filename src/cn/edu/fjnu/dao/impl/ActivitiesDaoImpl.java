@@ -19,7 +19,11 @@ import org.hibernate.criterion.Order;
 
 import javax.annotation.Resource;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/8 20:29
+ * @Description:
+ */
 @Repository(value = "activitiesDao")
 public class ActivitiesDaoImpl extends HibernateGenericDao<Activities, Integer> implements ActivitiesDao {
 

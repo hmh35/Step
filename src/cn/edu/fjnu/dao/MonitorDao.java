@@ -6,7 +6,11 @@ import cn.edu.fjnu.dao.base.Page;
 
 import java.util.List;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/5 10:41
+ * @Description: 监护人dao
+ */
 public interface MonitorDao extends GenericDao<Monitor,Integer>{
 
     /**

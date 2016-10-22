@@ -33,6 +33,7 @@ public class PositionServiceImpl implements PositionService{
             throw new AppRTException(AppExCode.P_MONITORED_NOT_EXISTS,"参数丢失，无法保存被监护人地理位置");
         }
         positionDao.save(position);
+        System.out.println(111);
     }
 
     /*

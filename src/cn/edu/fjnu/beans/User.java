@@ -4,7 +4,11 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/3 11:00
+ * @Description: User类测试实体
+ */
 @Entity
 @Table(name = "t_user")
 public class User implements Serializable {

@@ -3,7 +3,11 @@ package cn.edu.fjnu.beans;
 import javax.persistence.*;
 import java.util.Date;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/3 13:17
+ * @Description: 活动与被监护人中间表
+ */
 @Entity
 @Table(name = "t_mon_act")
 public class MonAct {

@@ -7,7 +7,11 @@ import javafx.geometry.Pos;
 import java.sql.Date;
 import java.util.List;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/6 22:54
+ * @Description:
+ */
 public interface PositionDao extends GenericDao<Position,Integer>{
     /**
      * 获取最新地址

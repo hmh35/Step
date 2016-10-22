@@ -17,7 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/4 12:28
+ * @Description:
+ */
 @Controller
 @RequestMapping("/monitored")
 public class MonitoredController {

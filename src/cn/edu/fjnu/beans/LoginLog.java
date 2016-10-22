@@ -3,7 +3,11 @@ package cn.edu.fjnu.beans;
 import javax.persistence.*;
 import java.util.Date;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/5 20:07
+ * @Description: 用户登录日志
+ */
 @Entity
 @Table(name = "t_login_log")
 public class LoginLog {

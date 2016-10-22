@@ -8,7 +8,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/3 11:00
+ * @Description: user测试类Dao实现层
+ */
 @Repository(value = "userDao")
 public class UserDaoImpl extends HibernateGenericDao<User,Integer> implements UserDao{
     @Override

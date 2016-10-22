@@ -9,7 +9,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/5 10:41
+ * @Description: 监护人dao实现类
+ */
 @Repository(value = "monitorDao")
 public class MonitorDaoImpl extends HibernateGenericDao<Monitor,Integer> implements MonitorDao {
 

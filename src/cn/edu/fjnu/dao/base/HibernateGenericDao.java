@@ -19,7 +19,11 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/3 15:06
+ * @Description: GenericDAO接口的Hibernate实现
+ */
 @Repository
 @Transactional
 public abstract class HibernateGenericDao<T, ID extends Serializable>

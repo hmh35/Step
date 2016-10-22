@@ -3,7 +3,11 @@ package cn.edu.fjnu.beans;
 import javax.persistence.*;
 import java.util.Date;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/3 13:12
+ * @Description: 被监护人与监护人中间表
+ */
 @Entity
 @Table(name = "t_monitored_and_monitor")
 public class MonitoredAndMonitor {

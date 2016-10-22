@@ -1,6 +1,10 @@
 package cn.edu.fjnu.dao.base;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/17 13:38
+ * @Description: 简单分页查询
+ */
 public class Page {
     private Integer startIndex;
     private Integer pageSize;

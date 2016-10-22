@@ -11,7 +11,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/9 18:57
+ * @Description:
+ */
 @Repository(value = "contactsDao")
 public class ContactsDaoImpl extends HibernateGenericDao<MonitoredAndMonitor,Integer> implements ContactsDao {
 
@@ -44,7 +48,7 @@ public class ContactsDaoImpl extends HibernateGenericDao<MonitoredAndMonitor,Int
 
     @Override
     public List findProContacts(String userNo) {
-        String hql = "from MonitoredAndMonitor m where m.monitorUserId = ? and m.monitoredNo in (select userId from User)";
+        String hql = "from MonitoredAndMonitor m where m.monitoredNo = ? and m.monitorUserId in (select userId from User)";
         Query query = getSession().createQuery(hql).setString(0,userNo);
         return query.list();
     }

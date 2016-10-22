@@ -1,6 +1,10 @@
 package cn.edu.fjnu.common;
 
-
+/**
+ * @Author: linqiu
+ * @Date: 2016/3/3 11:00
+ * @Description: 错误码列表
+ */
 public class AppExCode {
 
     public static final String testCode = "001";
