@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
             throw new AppRTException(AppExCode.U_COMMON_ERROR, "监护人含必填注册项为空");
         }
         User userTemp = userDao
-                .uniqueResult("userName", user.getPhoneNum());
+                .uniqueResult("phoneNum", user.getPhoneNum());
         if (userTemp != null) {
             logger.info("saveMonitor | this monitor is exists!");
             throw new AppRTException(AppExCode.U_IS_EXISTS, "该监护人用户已存在");
