@@ -168,4 +168,34 @@ public class ContactsController {
         }
         return JSON.toJSONString(resultData, true);
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/helpuser/get", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String getHelpuContacts(@RequestParam(value ="accesstoken") String accesstoken){
+        ResultData resultData = new ResultData();
+        System.out.println(accesstoken);
+        try {
+            System.out.println(accesstoken);
+            User user = userService.getUserByAccesstoken(accesstoken);
+            if(user!=null) {
+                List<MonitoredAndMonitor> contactsList = contactsService.getHelpContacts(user.getUserId().toString());
+                System.out.println(contactsList);
+                resultData.setData(JSON.toJSONString(contactsList));
+                resultData.setStatus(ResultData.SUCCESS);
+            }
+            else{
+                List<MonitoredAndMonitor> contactsList = null;
+                resultData.setData(JSON.toJSONString(contactsList));
+                resultData.setStatus(ResultData.ERROR);
+            }
+
+        } catch (AppRTException e){
+            resultData.setStatus(ResultData.ERROR);
+            resultData.setErrorCode(e.getCode());
+            resultData.setData(e.getMessage());
+            e.printStackTrace();
+        }
+        return JSON.toJSONString(resultData, true);
+
+    }
 }

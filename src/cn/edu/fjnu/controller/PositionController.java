@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,7 +53,8 @@ public class PositionController {
         ResultData resultData = new ResultData();
         try {
             User user = userService.getUserByAccesstoken(accesstoken);
-            saveposition.setMonitoredNo(user.getUserId().toString());
+            saveposition.setUserId(user.getUserId().toString());
+            saveposition.setCreateTime(new Date());
             positionService.savePosition(saveposition);
             //进行安全预警
             resultData.setStatus(ResultData.SUCCESS);
@@ -100,7 +102,7 @@ public class PositionController {
         try{
            // System.out.println("活动号："+actNo);
             Activities searchactivities = JSON.parseObject(activities,Activities.class);
-            System.out.println(searchactivities.getActNo());
+            System.out.println("活动号"+searchactivities.getActNo());
             User user = userService.getUserByAccesstoken(accesstoken);
             List<Position> positions = positionService.getActivitiesObjectNewestPosition(user.getUserId().toString(),searchactivities.getActNo());
             System.out.println("参与者最新地理位置："+JSON.toJSONString(positions));//输出测试

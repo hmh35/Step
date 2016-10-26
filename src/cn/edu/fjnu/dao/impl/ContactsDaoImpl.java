@@ -52,4 +52,5 @@ public class ContactsDaoImpl extends HibernateGenericDao<MonitoredAndMonitor,Int
         Query query = getSession().createQuery(hql).setString(0,userNo);
         return query.list();
     }
+
 }

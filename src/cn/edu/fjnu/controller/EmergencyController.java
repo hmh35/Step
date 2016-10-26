@@ -1,16 +1,10 @@
 package cn.edu.fjnu.controller;
 
-import cn.edu.fjnu.beans.Monitor;
-import cn.edu.fjnu.beans.Monitored;
-import cn.edu.fjnu.beans.Position;
-import cn.edu.fjnu.beans.User;
+import cn.edu.fjnu.beans.*;
 import cn.edu.fjnu.beans.base.ResultData;
 import cn.edu.fjnu.common.AppExCode;
 import cn.edu.fjnu.exception.AppRTException;
-import cn.edu.fjnu.service.MonitoredAndMonitorService;
-import cn.edu.fjnu.service.MonitoredService;
-import cn.edu.fjnu.service.PositionService;
-import cn.edu.fjnu.service.UserService;
+import cn.edu.fjnu.service.*;
 import com.alibaba.fastjson.JSON;
 import com.baidu.yun.push.exception.PushClientException;
 import com.baidu.yun.push.exception.PushServerException;
@@ -24,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,6 +38,8 @@ public class EmergencyController {
     @Resource
     private MonitoredService monitoredService;
 
+    @Resource
+    private ContactsService contactsService;
 
     /**
      * 获取被监控人即时地理位置并进行紧急推送
@@ -69,10 +66,15 @@ public class EmergencyController {
         ResultData resultData = new ResultData();
         System.out.println(position);
         Position saveposition = JSON.parseObject(position,Position.class);
+        System.out.println(saveposition);
         positionService.savePosition(saveposition);
         User user = userService.getUserByAccesstoken(accesstoken);
-        saveposition.setMonitoredNo(user.getUserId().toString());
-        List<User> monitorList = userService.getMonitorByMonitoredNo(user.getUserId());
+        saveposition.setUserId(user.getUserId().toString());
+        List<MonitoredAndMonitor> contactsList = contactsService.getHelpContacts(user.getUserId().toString());
+        List<User> monitorList = new ArrayList<User>();
+        for(int i = 0;i<contactsList.size();i++){
+            monitorList.add(userService.getPushObjectByuserId(contactsList.get(i).getMonitorUserId().toString()));
+        }
         System.out.println(monitorList);
         try {
             //推送紧急求救通知

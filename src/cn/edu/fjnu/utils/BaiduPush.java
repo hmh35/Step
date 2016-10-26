@@ -144,6 +144,7 @@ public class BaiduPush {
                 if (monitorList.get(i).getChannelId() == null || monitorList.get(i).getChannelId().toString().equals("")) {
                     continue;
                 }
+                System.out.println(monitorList.get(i).getChannelId());
                 channelIdList.add(monitorList.get(i).getChannelId());
             }
             String[] channelIds = new String[channelIdList.size()];

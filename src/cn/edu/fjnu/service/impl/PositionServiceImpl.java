@@ -28,7 +28,7 @@ public class PositionServiceImpl implements PositionService{
 
     @Override
     public void savePosition(Position position) {
-        if(position == null || position.getMonitoredNo() == null || position.getMonitoredNo() == ""){
+        if(position == null || position.getUserId() == null || position.getUserId() == ""){
             logger.info("savePosition | this position is null");
             throw new AppRTException(AppExCode.P_MONITORED_NOT_EXISTS,"参数丢失，无法保存被监护人地理位置");
         }
@@ -65,6 +65,7 @@ public class PositionServiceImpl implements PositionService{
         }
         List<Position> positionList;
         positionList=positionDao.getActivitiesObjectNewestPosition(monitorNo,actNo);
+        System.out.println(positionList);
         return positionList;
     }
 
@@ -74,7 +75,7 @@ public class PositionServiceImpl implements PositionService{
             logger.info("getAllPosition | monitoredNo is null");
             throw new AppRTException(AppExCode.NOT_EXIST_POSITION,"不存在历史轨迹");
         }
-        List<Position> positionList = positionDao.findAllByOneProperty("monitoredNo",monitoredNo);
+        List<Position> positionList = positionDao.findAllByOneProperty("userId",monitoredNo);
         if(positionList.size() <= 0){
             logger.info("getAllPosition | not exits position");
             throw new AppRTException(AppExCode.NOT_EXIST_POSITION,"不存在历史轨迹");

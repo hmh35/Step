@@ -26,4 +26,5 @@ public interface ContactsDao extends GenericDao<MonitoredAndMonitor,Integer>{
 
     List findProContacts(String userNo);
 
+   /* List findHelpContacts(String userNo);*/
 }

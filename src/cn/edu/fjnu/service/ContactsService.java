@@ -43,4 +43,6 @@ public interface ContactsService {
     void updateContacts(MonitoredAndMonitor contacts);
 
     List<MonitoredAndMonitor> getProContacts(String userNo);
+
+    List<MonitoredAndMonitor> getHelpContacts(String userNo);
 }

@@ -111,4 +111,20 @@ public class ContactsServiceImpl implements ContactsService{
         }
         return contactsList;
     }
+
+    @Override
+    public List<MonitoredAndMonitor> getHelpContacts(String userNo) {
+        if(userNo == null || userNo == ""){
+            logger.info("getAllContacts | this userName is null");
+            throw new AppRTException(AppExCode.CON_PARA_NULL,"用户名错误，无法进行查询");
+        }
+        List<MonitoredAndMonitor> contactsList = contactsDao.findProContacts(userNo);
+        if(contactsList.size() == 0){
+            logger.info("getAllContacts | do not exists contacts");
+            throw new AppRTException(AppExCode.CON_CONTACTS_NOT_EXISTS,"不存在该用户对应的联系人");
+        }
+        return contactsList;
+    }
+
+
 }

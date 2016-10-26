@@ -19,8 +19,8 @@ public class PositionDaoImpl extends HibernateGenericDao<Position,Integer> imple
 
     @Override
     public Position getNewestPosition(String monitoredNo) {
-        String hql = "from Position p where p.monitoredNo=:monitoredNo order by p.positionNo desc";
-        Query query = getSession().createQuery(hql).setString("monitoredNo",monitoredNo);
+        String hql = "from Position p where p.userId=? and p.createTime in (select max(a.createTime) from Position a)";
+        Query query = getSession().createQuery(hql).setString(0,monitoredNo);
         query.setFirstResult(0);
         query.setMaxResults(1);
         Position position = (Position) query.uniqueResult();
@@ -48,7 +48,7 @@ public class PositionDaoImpl extends HibernateGenericDao<Position,Integer> imple
                 "(SELECT monitored_no from t_monitored_and_monitor where MONITOR_NO=?)" +
                 " ORDER BY CREATE_TIME DESC)" +
                 " as p GROUP BY p.monitored_no;";*/
-        String hql = "from Position p where p.monitoredNo in (select m.monitoredNo from MonitoredAndMonitor m where m.monitorUserId = ?) and p.createTime in (select max(a.createTime) from Position a group by a.monitoredNo)";
+        String hql = "from Position p where p.userId in (select m.monitorUserId from MonitoredAndMonitor m where m.monitoredNo = ?) and p.createTime in (select max(a.createTime) from Position a group by a.userId)";
         Query query = getSession().createQuery(hql).setString(0,monitorNo);
         //Query query = getSession().createSQLQuery(sql).addEntity(Position.class).setString(0,monitorNo);
         List<Position> positions = query.list();
@@ -63,7 +63,7 @@ public class PositionDaoImpl extends HibernateGenericDao<Position,Integer> imple
                 "(SELECT monitored_no from t_monitored_and_monitor where (MONITOR_NO=? AND (relation_Ship='所有人' OR relation_Ship=?)))" +
                 " ORDER BY CREATE_TIME DESC)" +
                 " as p GROUP BY p.monitored_no;";*/
-        String hql = "from Position p where p.monitoredNo in (select u.monitoredNo from UserAndActivities u where u.creatorNo = ? and u.actNo = ?)";
+        String hql = "from Position p where p.userId in (select u.monitoredNo from UserAndActivities u where u.creatorNo = ? and u.actNo = ?) and p.createTime in (select max(a.createTime) from Position a group by a.userId)";
         Query query = getSession().createQuery(hql).setString(0,monitorNo).setInteger(1,actNo);
         return query.list();
     }

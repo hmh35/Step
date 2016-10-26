@@ -18,7 +18,7 @@ public class Position {
     private Integer positionNo;
 
     @Column(name = "monitored_no")
-    private String monitoredNo;
+    private String userId;
 
     @Column(name = "addr_long")
     private Double addrLong;
@@ -44,9 +44,9 @@ public class Position {
     public Position() {
     }
 
-    public Position(Integer positionNo, String monitoredNo, Double addrLong, Double addrLat, String address, Date createTime) {
+    public Position(Integer positionNo, String userId, Double addrLong, Double addrLat, String address, Date createTime) {
         this.positionNo = positionNo;
-        this.monitoredNo = monitoredNo;
+        this.userId = userId;
         this.addrLong = addrLong;
         this.addrLat = addrLat;
         this.address = address;
@@ -68,12 +68,12 @@ public class Position {
         this.positionNo = positionNo;
     }
 
-    public String getMonitoredNo() {
-        return monitoredNo;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setMonitoredNo(String monitoredNo) {
-        this.monitoredNo = monitoredNo;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public Double getAddrLong() {
