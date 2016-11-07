@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -84,12 +85,22 @@ public class PositionServiceImpl implements PositionService{
     }
 
     @Override
-    public List<Position> getPositionRange(String monitoredNo,Date time) {
+    public List<Position> getOutActPositionByMonitoredNo(String monitoredNo,String actNo){
         if(monitoredNo == null || monitoredNo ==""){
             logger.info("monitoredNo | monitoredNo is null");
             throw new AppRTException(AppExCode.U_IS_EXISTS,"该用户不存在");
         }
-        List<Position> positions = positionDao.getPositionRange(monitoredNo,time);
+        List<Position> positions = positionDao.getOutActPosition(monitoredNo,actNo);
         return positions;
+    }
+
+    @Override
+    public List<Position> getRangeSharePositionBy(String monitoredNo, Timestamp StartDate, Timestamp StopDate) {
+        if(monitoredNo == null || monitoredNo == ""){
+            logger.info("monitorNo | monitorNo is null");
+            throw new AppRTException(AppExCode.U_IS_EXISTS,"要查询的位置分享用户不存在");
+        }
+        List<Position> positionList = positionDao.getRangeSharePositon(monitoredNo,StartDate,StopDate);
+        return positionList;
     }
 }

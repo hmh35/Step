@@ -94,7 +94,7 @@ public class ActivitiesServiceImpl implements ActivitiesService {
             throw new AppRTException(AppExCode.AC_PARA_NULL, "创建者编号为空，无法获得活动");
         }
         List<Activities> activitiesList;
-        System.out.println("调用监控端");
+        System.out.println("调用监控端获取活动");
         if (isOnTime) {
             activitiesList = activitiesDao.getActivityByMonitor(creatorNo, isOnTime, page);
         } else {
@@ -115,7 +115,7 @@ public class ActivitiesServiceImpl implements ActivitiesService {
             throw new AppRTException(AppExCode.AC_PARA_NULL, "用户编号为空，无法获得活动");
         }
         List<Activities> activitiesList;
-        System.out.println("调用被监控端");
+        System.out.println("调用被监控端获取活动");
         if (isOnTime) {
             activitiesList = activitiesDao.getActivityByMonitoredOnTime(monitored, page);
         } else {
@@ -138,10 +138,22 @@ public class ActivitiesServiceImpl implements ActivitiesService {
         System.out.println("要删除的活动号："+activities.getActNo());
         activitiesDao.deleteById(activities.getActNo());
     }
+
     @Override
     public Activities getActivitiesById(Integer actNo)
     {
         Activities activities=activitiesDao.findById(actNo);
         return activities;
     }
+
+    @Override
+    public Activities getActNoActivities(String actNo) {
+        if(actNo == null || actNo == ""){
+            logger.info("actNo || actNo is null ");
+            throw new AppRTException(AppExCode.AC_NOT_FOUND,"活动号不存在");
+        }
+        Activities activities = activitiesDao.getActNoActivities(actNo);
+        return activities;
+    }
+
 }

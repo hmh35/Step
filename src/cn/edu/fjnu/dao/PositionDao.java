@@ -4,7 +4,8 @@ import cn.edu.fjnu.beans.Position;
 import cn.edu.fjnu.dao.base.GenericDao;
 import javafx.geometry.Pos;
 
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,5 +28,10 @@ public interface PositionDao extends GenericDao<Position,Integer>{
     /*
     * 获取对象固定时间轨迹
     * */
-    List<Position> getPositionRange(String monitoredNo,Date time);
+    List<Position> getOutActPosition(String monitoredNo,String actNo);
+
+    /*
+    * 位置分享
+    * */
+    List<Position> getRangeSharePositon(String monitoredNo, Timestamp StartDate, Timestamp StopDate);
 }

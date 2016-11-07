@@ -6,7 +6,8 @@ import cn.edu.fjnu.dao.base.HibernateGenericDao;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -69,8 +70,18 @@ public class PositionDaoImpl extends HibernateGenericDao<Position,Integer> imple
     }
 
     @Override
-    public List<Position> getPositionRange(String monitoredNo,Date time) {
-        String hql = "from Positon p where p.monitoredNo =? and p.createTime";
-        return null;
+    public List<Position> getOutActPosition(String monitoredNo,String actNo) {
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        System.out.println(time);
+        String hql = "from Position p where p.userId = ? and p.createTime >=(select a.aplyUpplmt from Activities a where a.actNo=?) and p.createTime <= ? order by p.positionNo";
+        Query query = getSession().createQuery(hql).setString(0,monitoredNo).setString(1,actNo).setTimestamp(2,time);
+        return query.list();
+    }
+
+    @Override
+    public List<Position> getRangeSharePositon(String monitoredNo, Timestamp StartDate, Timestamp StopDate) {
+        String hql = "from Position p where p.userId = ? and p.createTime>=? and p.createTime<=? order by p.positionNo";
+        Query query = getSession().createQuery(hql).setString(0,monitoredNo).setTimestamp(1,StartDate).setTimestamp(2,StopDate);
+        return query.list();
     }
 }

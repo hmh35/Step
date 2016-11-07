@@ -58,4 +58,9 @@ public interface ActivitiesService {
      */
     void deleteActivities(Activities activities, User user);
 
+    /*
+    * 获取指定活动号活动
+    * */
+    Activities getActNoActivities(String actNo);
+
 }

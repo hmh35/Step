@@ -40,4 +40,6 @@ public interface ActivitiesDao extends GenericDao<Activities, Integer> {
     List getActivityByMonitor(String monitorNo, boolean isOnTime, Page page);
 
     Activities getActivitiesByCCT(String creatorNo,String createDate);
+
+    Activities getActNoActivities(String actNo);
 }

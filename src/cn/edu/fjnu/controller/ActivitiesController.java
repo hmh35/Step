@@ -195,4 +195,26 @@ public class ActivitiesController {
         }
         return JSON.toJSONString(resultData, true);
     }
+
+    /*
+    * 获取指定活动号的活动（活动参与人收到的推送相关活动）
+    * */
+    @ResponseBody
+    @RequestMapping(value = "/monitored/activities/actNoget", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String getActivitiedByMonitored(@RequestParam(value = "actNo") String actNo) {
+        ResultData resultData = new ResultData();
+        System.out.println("活动指定号"+actNo);
+        try {
+            Activities activities = activitiesService.getActNoActivities(actNo);
+            System.out.println(JSON.toJSONString(activities));
+            resultData.setData(JSON.toJSONString(activities));
+            resultData.setStatus(ResultData.SUCCESS);
+        } catch (AppRTException e) {
+            resultData.setStatus(ResultData.ERROR);
+            resultData.setErrorCode(e.getCode());
+            resultData.setData(e.getMessage());
+            e.printStackTrace();
+        }
+        return JSON.toJSONString(resultData, true);
+    }
 }

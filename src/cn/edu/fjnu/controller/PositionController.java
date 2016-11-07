@@ -2,9 +2,14 @@ package cn.edu.fjnu.controller;
 
 import cn.edu.fjnu.beans.*;
 import cn.edu.fjnu.beans.base.ResultData;
+import cn.edu.fjnu.common.AppExCode;
 import cn.edu.fjnu.exception.AppRTException;
 import cn.edu.fjnu.service.*;
 import com.alibaba.fastjson.JSON;
+import com.baidu.yun.push.exception.PushClientException;
+import com.baidu.yun.push.exception.PushServerException;
+import net.sf.json.JSONString;
+import org.apache.commons.collections.keyvalue.TiedMapEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -14,6 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.xml.transform.Result;
+
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +43,9 @@ public class PositionController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private ContactsService contactsService;
 
     @Resource
     private MonitorService monitorService;
@@ -81,6 +94,7 @@ public class PositionController {
             Position position = positionService.getNewestPosition(user.getUserId().toString());
             resultData.setData(JSON.toJSON(position));
             resultData.setStatus(ResultData.SUCCESS);
+            System.out.println(position);
         }catch (AppRTException e){
             resultData.setStatus(ResultData.ERROR);
             resultData.setErrorCode(e.getCode());
@@ -165,15 +179,89 @@ public class PositionController {
     }
 
     /*
-    * 获取活动对象固定时间内的轨迹
+    * 获取活动对象一定时间内的轨迹(活动创建人请求时间和活动开始时间)
     * */
-/*    @ResponseBody
-    @RequestMapping(value = "/monitored/timePositon",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    @RequestMapping(value = "/monitored/timePosition",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String getTimePostion(@RequestParam(value = "monitoredNo")String monitoredNo,
-                                 @RequestParam(value = "timeRange") String timeRange){
+                                 @RequestParam(value = "activities") String activities) {
         ResultData resultData = new ResultData();
         try{
-            List<Position> positionsList = positionService.getPositionRange(monitoredNo,timeRange);
+            Activities getactivities = JSON.parseObject(activities,Activities.class);
+            System.out.println(getactivities);
+            List<Position> positions = positionService.getOutActPositionByMonitoredNo(monitoredNo,getactivities.getActNo().toString());
+            System.out.println(JSON.toJSONString(positions));
+            resultData.setData(JSON.toJSONString(positions));
+            resultData.setStatus(ResultData.SUCCESS);
+        }catch (AppRTException e){
+            resultData.setStatus(ResultData.ERROR);
+            resultData.setErrorCode(e.getCode());
+            resultData.setData(e.getMessage());
+            e.printStackTrace();
+        }
+        return JSON.toJSONString(resultData, true);
+
+    }
+
+    /*
+    * 位置分享并推送
+    * */
+    @ResponseBody
+    @RequestMapping(value = "/user/pushShareInfo",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String getShareInfo(@RequestParam(value = "accesstoken")String accesstoken,
+                                 @RequestParam(value = "monitoredandmonitor") String monitoredandmonitor,
+                                 @RequestParam(value = "timeStart") Timestamp timeStart,
+                                 @RequestParam(value = "timeStop") Timestamp timeStop){
+        ResultData resultData = new ResultData();
+        try{
+            User user = userService.getUserByAccesstoken(accesstoken);
+            System.out.println(monitoredandmonitor);
+            List<MonitoredAndMonitor> monitorNolist = JSON.parseArray(monitoredandmonitor,MonitoredAndMonitor.class);
+            System.out.println(monitorNolist);
+            List<User> monitorList = new ArrayList<User>();
+            for(int i=0;i<monitorNolist.size();i++){
+                monitorList.add(userService.getPushObjectByuserId(monitorNolist.get(i).getMonitorUserId().toString()));
+            }
+            //进行推送
+            System.out.println("被推送对象："+monitorList);
+            cn.edu.fjnu.utils.BaiduPush.pushShareInfo(user,timeStart,timeStop,monitorList);
+            resultData.setStatus(ResultData.SUCCESS);
+        } catch (PushClientException e) {
+            resultData.setStatus(ResultData.ERROR);
+            resultData.setErrorCode(AppExCode.PUSH_ERROR);
+            resultData.setData("推送请求失败");
+            e.printStackTrace();
+        } catch (PushServerException e) {
+            resultData.setStatus(ResultData.ERROR);
+            resultData.setErrorCode(AppExCode.PUSH_ERROR);
+            resultData.setData("推送请求失败");
+            e.printStackTrace();
+        } catch (AppRTException e) {
+            resultData.setStatus(ResultData.ERROR);
+            //查找不到对应的被监护人，也属于推送失败
+            if (e.getCode().equals(AppExCode.U_NOT_FIND_MONITORED)) {
+                resultData.setErrorCode(AppExCode.PUSH_ERROR);
+                resultData.setData("推送请求失败");
+            } else {
+                resultData.setErrorCode(e.getCode());
+                resultData.setData(e.getMessage());
+            }
+            e.printStackTrace();
+        }
+        return JSON.toJSONString(resultData, true);
+    }
+
+    /*
+    * 获取位置分享用户固定时间内的轨迹
+    * */
+    @ResponseBody
+    @RequestMapping(value = "/user/SharePosition",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String getTimePostion(@RequestParam(value = "userId")String userId,
+                                 @RequestParam(value = "timeStart") Timestamp timeStart,
+                                 @RequestParam(value = "timeStop") Timestamp timeStop){
+        ResultData resultData = new ResultData();
+        try{
+            List<Position> positionsList = positionService.getRangeSharePositionBy(userId,timeStart,timeStop);
             resultData.setData(JSON.toJSONString(positionsList));
             resultData.setStatus(ResultData.SUCCESS);
         }catch (AppRTException e){
@@ -183,6 +271,6 @@ public class PositionController {
             e.printStackTrace();
         }
         return JSON.toJSONString(resultData, true);
-    }*/
+    }
 
 }

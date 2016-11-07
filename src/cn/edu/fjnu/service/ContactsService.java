@@ -45,4 +45,5 @@ public interface ContactsService {
     List<MonitoredAndMonitor> getProContacts(String userNo);
 
     List<MonitoredAndMonitor> getHelpContacts(String userNo);
+
 }
