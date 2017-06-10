@@ -22,7 +22,7 @@ public interface UserDao extends GenericDao<User,Integer>{
      */
     List getAllMonitoredByMonitor(Integer monitorNo, String pushObject);
 
-    List getProperMonitoredByMonitor(Integer monitorNo,String pushObject);
+    List getProperMonitoredByMonitor(Integer monitorNo, String pushObject);
 
     /*
     * 获取监护人的被监护人
@@ -34,5 +34,19 @@ public interface UserDao extends GenericDao<User,Integer>{
     * */
     User getUser(String userId);
 
-    public void UpdateChannelId(String channelId,Integer userId);
+    void updateHeadPicture(String path, Integer userId);
+
+    public void UpdateChannelId(String channelId, Integer userId);
+
+    void updatePwd(String newPwd, Integer userId);
+
+    void updateWeight(String weight,Integer userId);
+
+    void updateHeight(String Height,Integer userId);
+
+    void updateuserName(String userName,Integer userId);
+
+    void updateuserSex(String userSex,Integer userId);
+
+    void updateuserAge(Integer age,Integer userId);
 }

@@ -1,7 +1,6 @@
 package cn.edu.fjnu.service.impl;
 
 import cn.edu.fjnu.beans.LoginLog;
-import cn.edu.fjnu.beans.User;
 import cn.edu.fjnu.common.AppExCode;
 import cn.edu.fjnu.dao.LoginLogDao;
 import cn.edu.fjnu.exception.AppRTException;
@@ -138,5 +137,10 @@ public class LoginLogServiceImpl implements LoginLogService {
             throw  new AppRTException(AppExCode.A_CREATE_ERROR,"该用户存不存在!");
         }
         return loginLog.getAccesstoken();
+    }
+
+    @Override
+    public void modifyUserName(String userName, String accesstoken) {
+        loginLogDao.updateUserName(userName,accesstoken);
     }
 }

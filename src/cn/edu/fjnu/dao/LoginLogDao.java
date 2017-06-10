@@ -8,6 +8,8 @@ import cn.edu.fjnu.dao.base.GenericDao;
  * @Date: 2016/3/5 20:14
  * @Description: 登录日志dao
  */
-public interface LoginLogDao extends GenericDao<LoginLog,Integer>{
+public interface LoginLogDao extends GenericDao<LoginLog,Integer> {
     LoginLog getLoginLog(String accesstoken);
+
+    void updateUserName(String userName, String accesstoken);
 }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  * @Description: 登录日志dao实现类
  */
 @Repository(value = "loginLogDao")
-public class LoginLogDaoImpl extends HibernateGenericDao<LoginLog,Integer> implements LoginLogDao{
+public class  LoginLogDaoImpl extends HibernateGenericDao<LoginLog,Integer> implements LoginLogDao{
     @Override
     public LoginLog getLoginLog(String accesstoken) {
         String hql = "from LoginLog lo where lo.accesstoken = ?";
@@ -20,5 +20,12 @@ public class LoginLogDaoImpl extends HibernateGenericDao<LoginLog,Integer> imple
         query.setFirstResult(0);
         query.setMaxResults(1);
         return (LoginLog) query.uniqueResult();
+    }
+
+    @Override
+    public void updateUserName(String userName, String accesstoken) {
+        String hql ="update LoginLog a set a.userName=? where a.accesstoken =?";
+        Query query =getSession().createQuery(hql).setString(0,userName).setString(1,accesstoken);
+        query.executeUpdate();
     }
 }

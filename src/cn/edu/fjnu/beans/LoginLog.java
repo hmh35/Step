@@ -4,12 +4,12 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * @Author: linqiu
- * @Date: 2016/3/5 20:07
+ * @Author: HMH
+ * @Date: 2016/11/20 20:07
  * @Description: 用户登录日志
  */
 @Entity
-@Table(name = "t_login_log")
+@Table(name = "s_login_log")
 public class LoginLog {
 
     @Id
@@ -24,7 +24,7 @@ public class LoginLog {
     private String accesstoken;
 
     @Column(name = "create_time")
-    private Date createTime;
+    private  Date createTime;
 
     @Column(name = "update_time")
     private Date updateTime;

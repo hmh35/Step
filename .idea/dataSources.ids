@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="MySQL - Step@localhost" uuid="7cff2b17-65e8-4759-9aee-ca9e8b7217d6">
+    <database-info product="MySQL" version="5.7.13" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <database-model serializer="dbm" rdbms="MYSQL" format-version="2.6">
+      <schema id="1" name="step">
+        <visible>1</visible>
+      </schema>
+      <schema id="2" name="hmh"/>
+      <schema id="3" name="information_schema"/>
+      <schema id="4" name="lbsmonitor-2016-03-05"/>
+      <schema id="5" name="lbsmonitor-2016-03-18"/>
+      <schema id="6" name="mylbs"/>
+      <schema id="7" name="mysql"/>
+      <schema id="8" name="performance_schema"/>
+      <schema id="9" name="sakila"/>
+      <schema id="10" name="schema"/>
+      <schema id="11" name="sys"/>
+      <schema id="12" name="njue"/>
+      <schema id="13" name="test"/>
+      <table id="14" parent="1" name="s_user"/>
+      <table id="15" parent="1" name="s_user_and_ring"/>
+      <table id="16" parent="1" name="s_login_log"/>
+      <table id="17" parent="1" name="s_synamic"/>
+      <table id="18" parent="1" name="s_thumb"/>
+      <table id="19" parent="1" name="s_comment"/>
+      <table id="20" parent="1" name="s_linkdata"/>
+      <column id="21" parent="14" name="USER_ID">
+        <mandatory>1</mandatory>
+        <data-type>int(11)|0</data-type>
+        <sequence-identity>1</sequence-identity>
+      </column>
+      <column id="22" parent="14" name="PHONE_NUM">
+        <data-type>varchar(11)|0</data-type>
+      </column>
+      <column id="23" parent="14" name="USER_NAME">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="24" parent="14" name="USER_PWD">
+        <data-type>varchar(32)|0</data-type>
+      </column>
+      <column id="25" parent="14" name="USER_WEIGHT">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="26" parent="14" name="USER_HEIGHT">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="27" parent="14" name="USER_SEX">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="28" parent="14" name="USER_AGE">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="29" parent="14" name="CREATE_TIME">
+        <data-type>timestamp|0</data-type>
+      </column>
+      <column id="30" parent="14" name="CHANNEL_ID">
+        <data-type>varchar(32)|0</data-type>
+      </column>
+      <column id="31" parent="14" name="USER_HEAD_PICTURE">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <key id="32" parent="14" name="PRIMARY">
+        <columns>USER_ID</columns>
+        <primary>1</primary>
+      </key>
+      <column id="33" parent="15" name="UR_NO">
+        <mandatory>1</mandatory>
+        <data-type>int(11)|0</data-type>
+      </column>
+      <column id="34" parent="15" name="RING_NO">
+        <mandatory>1</mandatory>
+        <data-type>int(11)|0</data-type>
+      </column>
+      <column id="35" parent="15" name="CREATOR_NO">
+        <mandatory>1</mandatory>
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="36" parent="15" name="THUMB_NO">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="37" parent="15" name="REVIEWER_NO">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <key id="38" parent="15" name="PRIMARY">
+        <columns>UR_NO</columns>
+        <primary>1</primary>
+      </key>
+      <column id="39" parent="16" name="LOGIN_LOG_NO">
+        <mandatory>1</mandatory>
+        <data-type>int(11)|0</data-type>
+        <sequence-identity>1</sequence-identity>
+      </column>
+      <column id="40" parent="16" name="USER_NAME">
+        <data-type>varchar(32)|0</data-type>
+      </column>
+      <column id="41" parent="16" name="ACCESS_TOKEN">
+        <data-type>varchar(128)|0</data-type>
+      </column>
+      <column id="42" parent="16" name="CREATE_TIME">
+        <data-type>timestamp|0</data-type>
+      </column>
+      <column id="43" parent="16" name="UPDATE_TIME">
+        <data-type>timestamp|0</data-type>
+      </column>
+      <column id="44" parent="16" name="EFFICTIVE_TIME">
+        <data-type>timestamp|0</data-type>
+      </column>
+      <key id="45" parent="16" name="PRIMARY">
+        <columns>LOGIN_LOG_NO</columns>
+        <primary>1</primary>
+      </key>
+      <column id="46" parent="17" name="RING_ID">
+        <mandatory>1</mandatory>
+        <data-type>int(11)|0</data-type>
+        <sequence-identity>1</sequence-identity>
+      </column>
+      <column id="47" parent="17" name="CREATOR_NO">
+        <mandatory>1</mandatory>
+        <data-type>varchar(11)|0</data-type>
+      </column>
+      <column id="48" parent="17" name="CREATOR_NAME">
+        <data-type>varchar(40)|0</data-type>
+      </column>
+      <column id="49" parent="17" name="DESCRIPTION">
+        <data-type>varchar(1000)|0</data-type>
+      </column>
+      <column id="50" parent="17" name="USER_HEAD_PICTURE">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="51" parent="17" name="PICTURE">
+        <data-type>varchar(20000)|0</data-type>
+      </column>
+      <column id="52" parent="17" name="REVIEW_ID">
+        <data-type>int(11) unsigned zerofill|0</data-type>
+      </column>
+      <column id="53" parent="17" name="THUMB">
+        <data-type>int(11) unsigned zerofill|0</data-type>
+      </column>
+      <column id="54" parent="17" name="CREATE_TIME">
+        <data-type>timestamp|0</data-type>
+      </column>
+      <column id="55" parent="17" name="RING_STATUS">
+        <data-type>int(11)|0</data-type>
+      </column>
+      <key id="56" parent="17" name="PRIMARY">
+        <columns>RING_ID</columns>
+        <primary>1</primary>
+      </key>
+      <column id="57" parent="18" name="SYNAMIC_ID">
+        <mandatory>1</mandatory>
+        <data-type>varchar(11)|0</data-type>
+      </column>
+      <column id="58" parent="18" name="THUMBER_ID">
+        <data-type>varchar(11)|0</data-type>
+      </column>
+      <column id="59" parent="18" name="THUMB_HEAD_PICTURE">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="60" parent="18" name="THUMB_ID">
+        <mandatory>1</mandatory>
+        <data-type>int(11) unsigned zerofill|0</data-type>
+        <sequence-identity>1</sequence-identity>
+      </column>
+      <column id="61" parent="18" name="THUMB_COUNT">
+        <data-type>int(10) unsigned zerofill|0</data-type>
+      </column>
+      <key id="62" parent="18" name="PRIMARY">
+        <columns>THUMB_ID</columns>
+        <primary>1</primary>
+      </key>
+      <column id="63" parent="19" name="COMMENT_ID">
+        <mandatory>1</mandatory>
+        <data-type>int(10) unsigned zerofill|0</data-type>
+        <sequence-identity>1</sequence-identity>
+      </column>
+      <column id="64" parent="19" name="SYNAMIC_ID">
+        <mandatory>1</mandatory>
+        <data-type>int(11)|0</data-type>
+      </column>
+      <column id="65" parent="19" name="OBSERVER_ID">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="66" parent="19" name="OBSERVER_NAME">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="67" parent="19" name="OBSERVER_HEAD_PICTURE">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="68" parent="19" name="RECEIVER_ID">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="69" parent="19" name="RECEIVER_NAME">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="70" parent="19" name="COMMENT_CONTENT">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="71" parent="19" name="COMMENT_TIME">
+        <data-type>timestamp|0</data-type>
+        <default-expression>&apos;0000-00-00 00:00:00&apos;</default-expression>
+      </column>
+      <column id="72" parent="19" name="COMMENT_COUNT">
+        <data-type>int(11) unsigned zerofill|0</data-type>
+      </column>
+      <key id="73" parent="19" name="PRIMARY">
+        <columns>COMMENT_ID</columns>
+        <primary>1</primary>
+      </key>
+      <column id="74" parent="20" name="LINK_ID">
+        <mandatory>1</mandatory>
+        <data-type>int(11)|0</data-type>
+        <sequence-identity>1</sequence-identity>
+      </column>
+      <column id="75" parent="20" name="LINK_HREF">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="76" parent="20" name="LINK_TEXT">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="77" parent="20" name="LINK_PIC">
+        <data-type>varchar(255)|0</data-type>
+      </column>
+      <column id="78" parent="20" name="TIME">
+        <data-type>timestamp|0</data-type>
+      </column>
+      <key id="79" parent="20" name="PRIMARY">
+        <columns>LINK_ID</columns>
+        <primary>1</primary>
+      </key>
+    </database-model>
+  </data-source>
+</component>

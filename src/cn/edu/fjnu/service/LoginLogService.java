@@ -48,4 +48,6 @@ public interface LoginLogService {
      * @return
      */
     String getAccesstoken(String userName);
+
+    void modifyUserName(String userName, String accesstoken);
 }

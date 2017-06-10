@@ -5,19 +5,21 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @Author: linqiu
- * @Date: 2016/3/3 11:00
+ * @Author: HMH
+ * @Date: 2016/11/10 10：10
  * @Description: User类测试实体
  */
 @Entity
-@Table(name = "t_user")
+@Table(name = "s_user")
 public class User implements Serializable {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="USER_ID",updatable = false)
     private Integer userId;
+
+    @Column(name="USER_HEAD_PICTURE")
+    private  String userHeadPicture;
 
     @Column(name = "PHONE_NUM")
     private String phoneNum;
@@ -25,8 +27,8 @@ public class User implements Serializable {
     @Column(name = "USER_PWD")
     private String userPwd;
 
-    @Column(name = "REAL_NAME")
-    private String realName;
+    @Column(name = "USER_NAME")
+    private String userName;
 
     @Column(name = "USER_AGE")
     private Integer userAge;
@@ -34,100 +36,75 @@ public class User implements Serializable {
     @Column(name = "USER_SEX")
     private String userSex;
 
+    @Column(name = "USER_HEIGHT")
+    private String userHeight;
+
     @Column(name = "CREATE_TIME")
     private Date createTime;
-
-    @Column(name = "UPDATE_TIME")
-    private Date updateTime;
 
     @Column(name = "CHANNEL_ID")
     private String channelId;
 
+    @Column(name="USER_WEIGHT")
+    private  String userWeight;
+
     public User() {
     }
 
-    public User(String phoneNum, String userPwd, String realName, Integer userAge, String userSex, Date createTime, Date updateTime, String channelId) {
+    public User(String userHeadPicture, String phoneNum, String userPwd, String userName, Integer userAge, String userSex, String userHeight, Date createTime, String channelId, String userWeight) {
+        this.userHeadPicture = userHeadPicture;
         this.phoneNum = phoneNum;
         this.userPwd = userPwd;
-        this.realName = realName;
+        this.userName = userName;
         this.userAge = userAge;
         this.userSex = userSex;
+        this.userHeight = userHeight;
         this.createTime = createTime;
-        this.updateTime = updateTime;
         this.channelId = channelId;
+        this.userWeight = userWeight;
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
+    public Integer getUserId() {return userId;}
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
+    public void setUserId(Integer userId) {this.userId = userId;}
 
-    public String getPhoneNum() {
-        return phoneNum;
-    }
+    public String getUserHeadPicture() {return userHeadPicture;}
 
-    public void setPhoneNum(String phoneNum) {
-        this.phoneNum = phoneNum;
-    }
+    public void setUserHeadPicture(String userHeadPicture) {this.userHeadPicture = userHeadPicture;}
 
-    public String getRealName() {
-        return realName;
-    }
+    public String getPhoneNum() {return phoneNum;}
 
-    public void setRealName(String realName) {
-        this.realName = realName;
-    }
+    public void setPhoneNum(String phoneNum) {this.phoneNum = phoneNum;}
 
-    public Integer getUserAge() {
-        return userAge;
-    }
+    public String getUserPwd() {return userPwd;}
 
-    public void setUserAge(Integer userAge) {
-        this.userAge = userAge;
-    }
+    public void setUserPwd(String userPwd) {this.userPwd = userPwd;}
 
-    public String getUserSex() {
-        return userSex;
-    }
+    public String getUserName() {return userName;}
 
-    public void setUserSex(String userSex) {
-        this.userSex = userSex;
-    }
+    public void setUserName(String userName) {this.userName = userName;}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+    public Integer getUserAge() {return userAge;}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+    public void setUserAge(Integer userAge) {this.userAge = userAge;}
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
+    public String getUserSex() {return userSex;}
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
+    public void setUserSex(String userSex) {this.userSex = userSex;}
 
-    public String getUserPwd() {
-        return userPwd;
-    }
+    public String getUserHeight() {return userHeight;}
 
-    public void setUserPwd(String userPwd) {
-        this.userPwd = userPwd;
-    }
+    public void setUserHeight(String userHeight) {this.userHeight = userHeight;}
 
-    public String getChannelId() {
-        return channelId;
-    }
+    public Date getCreateTime() {return createTime;}
 
-    public void setChannelId(String channelId) {
-        this.channelId = channelId;
-    }
+    public void setCreateTime(Date createTime) {this.createTime = createTime;}
 
+    public String getChannelId() {return channelId;}
 
+    public void setChannelId(String channelId) {this.channelId = channelId;}
+
+    public String getUserWeight() {return userWeight;}
+
+    public void setUserWeight(String userWeight) {this.userWeight = userWeight;}
 }

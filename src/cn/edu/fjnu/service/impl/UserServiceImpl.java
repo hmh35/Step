@@ -1,24 +1,29 @@
 package cn.edu.fjnu.service.impl;
 
-import cn.edu.fjnu.beans.Monitor;
-import cn.edu.fjnu.beans.Monitored;
+import cn.edu.fjnu.beans.LoginLog;
+import cn.edu.fjnu.beans.Synamic;
 import cn.edu.fjnu.beans.User;
-import cn.edu.fjnu.beans.UserAndActivities;
 import cn.edu.fjnu.common.AppExCode;
-import cn.edu.fjnu.dao.MonitorDao;
+import cn.edu.fjnu.dao.CommentDao;
+import cn.edu.fjnu.dao.SynamicDao;
 import cn.edu.fjnu.dao.UserDao;
-import cn.edu.fjnu.dao.base.Page;
 import cn.edu.fjnu.exception.AppRTException;
 import cn.edu.fjnu.service.LoginLogService;
+import cn.edu.fjnu.service.SynamicService;
 import cn.edu.fjnu.service.UserService;
+import cn.edu.fjnu.utils.Md5;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import sun.misc.BASE64Decoder;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: linqiu
@@ -27,16 +32,24 @@ import java.util.Map;
  */
 @Service
 public class UserServiceImpl implements UserService {
-    private Logger logger = LoggerFactory.getLogger(MonitorServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    @Resource
-    private MonitorDao monitorDao;
 
     @Resource
     private UserDao userDao;
 
     @Resource
     private LoginLogService loginLogService;
+
+    @Resource
+    private SynamicService synamicService;
+
+    @Resource
+    private SynamicDao synamicDao;
+    
+    @Resource
+    private CommentDao commentDao;
+
 
     @Override
     public User login(String phoneNum, String userPwd) {
@@ -50,7 +63,7 @@ public class UserServiceImpl implements UserService {
             throw new AppRTException(AppExCode.U_IS_EXISTS, "监护人用户名不存在");
         }
 
-        System.out.println("  service"+user.getUserPwd()+"  "+userPwd+"  "+user.getRealName());
+        System.out.println("  service"+user.getUserPwd()+"  "+userPwd+"  "+user.getUserName());
         if (!user.getUserPwd().equals(userPwd)) {
             logger.info("login | monitor userName or use_pwd is no valid!");
             throw new AppRTException(AppExCode.U_ERROR_PWD, "监护人用户名或密码错误");
@@ -68,6 +81,11 @@ public class UserServiceImpl implements UserService {
             logger.info("saveMonitor | this monitor is null!");
             throw new AppRTException(AppExCode.U_COMMON_ERROR, "监护人含必填注册项为空");
         }
+        if(user.getUserName() ==null){
+            StringBuffer buf = new StringBuffer("用户");
+            buf.append(user.getPhoneNum());//加上日期
+            user.setUserName(buf.toString());
+        }
         User userTemp = userDao
                 .uniqueResult("phoneNum", user.getPhoneNum());
         if (userTemp != null) {
@@ -78,58 +96,50 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user) {
-        if (user == null || user.getPhoneNum() == null
-                || user.getPhoneNum() == "") {
-            logger.info("updateMonitor | this monitor is null!");
-            throw new AppRTException(AppExCode.U_COMMON_ERROR, "监护人修改信息错误");
+    public void updateUser(User user, Integer userId)throws IOException {
+        if(user ==null || user.equals(userDao.getUser(userId.toString()))){
+            logger.info("updateUser | userInformation is exists!");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "信息没有更新，不用更改");
         }
-        Monitor monitorTemp = monitorDao.uniqueResult("userName", user.getPhoneNum());
-        if (monitorTemp.getStatus().equals(Monitor.MonitorStatus.INVALID)) {
-            logger.info("updateMonitor | monitor is no availabl");
-            throw new AppRTException(AppExCode.U_NOT_AVAILABLE, "用户已被禁用,无法修改密码");
+        if(user.getUserName()!=null) {
+            userDao.updateuserName(user.getUserName(), userId);
+            List<Synamic> synamicList =synamicService.getMySynamic(userId.toString());
+            for(int i=0;i<synamicList.size();i++){
+                Synamic synamic =synamicList.get(i);
+                synamicDao.updateSynamicCreatorName(user.getUserName(),synamic.getRingId());
+                commentDao.updateuserName(user.getUserName(),userId);
+            }
         }
-        //不能更新的字段
+        if(user.getUserAge()!=null)
+            userDao.updateuserAge(user.getUserAge(),userId);
+        if(user.getUserHeight()!=null)
+            userDao.updateHeight(user.getUserHeight(),userId);
+        if(user.getUserWeight()!=null)
+            userDao.updateWeight(user.getUserWeight(),userId);
+        if(user.getUserSex()!=null)
+            userDao.updateuserSex(user.getUserSex(),userId);
+        /*if(user.getPhoneNum()!=null){
+            loginLogService.modifyUserName(user.getPhoneNum(),accesstoken);
+        }*/
+       // userDao.update(user);
 
-        user.setUserPwd(monitorTemp.getUserPwd());
-        user.setCreateTime(monitorTemp.getCreateTime());
-
-        //可以更新的字段
-        user.setUpdateTime(new Date());
-        userDao.update(user);
     }
 
     @Override
-    public void updatePassword(String userName, String oldPassword, String newPassword) {
-        if (userName == null || userName == "") {
-            logger.info("updatePassowrd | userName is null!");
-            throw new AppRTException(AppExCode.U_COMMON_ERROR, "监护人修改密码失败");
-        }
-        if (oldPassword == null || oldPassword == "") {
-            logger.info("old password is null!");
-            throw new AppRTException(AppExCode.U_COMMON_ERROR, "监护人旧密码为空");
-        }
-        if (newPassword == null || newPassword == "") {
-            logger.info("new password is null!");
-            throw new AppRTException(AppExCode.U_COMMON_ERROR, "监护人新密码为空");
-        }
-        Monitor monitor = monitorDao.uniqueResult("userName", userName);
-        if (monitor == null) {
-            logger.info("updatePassowrd | this monitor is not exitst!");
-            throw new AppRTException(AppExCode.U_COMMON_ERROR, "监护人用户不存在，修改密码失败");
-        }
-        if (monitor.getStatus().equals(Monitor.MonitorStatus.INVALID)) {
-            logger.info("updatePassword | monitor is no available");
-            throw new AppRTException(AppExCode.U_NOT_AVAILABLE, "监护人用户已被禁用,无法修改密码");
-        }
-        if (!monitor.getUserPwd().equals(oldPassword)) {
-            logger.info("updatePassword | userName or password is no valid");
-            throw new AppRTException(AppExCode.U_ERROR_PWD, "监护人旧密码错误");
-        }
-        monitor.setUserPwd(newPassword);
-        monitor.setUpdateTime(new Date());
-        monitorDao.update(monitor);
+    public void updateHeadPicture(String base64String, Integer userId,String savePath) throws IOException {
+        User user =userDao.getUser(userId.toString());
+       // String path = ToHeadPicture(user.getUserHeadPicture(), userId,savePath);
+        String path =ToHeadPicture(base64String,userId,savePath);
+        /*if(user.getUserHeadPicture()!=null ||user.getUserHeadPicture()!="") {*/
+        userDao.updateHeadPicture(path,userId);
+        synamicService.updateHeadPicture(path,user.getUserId());
+        commentDao.updateHeadPicture(path,user.getUserId());
+        
+        /*}else
+            user.setUserHeadPicture(path);*/
+
     }
+
     @Override
     public User getUserByAccesstoken(String accesstoken) {
         if(accesstoken == null || accesstoken == ""){
@@ -149,64 +159,6 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    @Override
-    public List<Monitored> getAllMonitoredByMonitorByPage(Integer monitorNo, Page page) {
-        if(monitorNo == null){
-            logger.info("getAllMonitoredByMonitor | monitorNo is null!");
-            throw new AppRTException(AppExCode.U_NOT_FIND_MONITORED, "无法获取所有被监护人");
-        }
-        List<Monitored> monitoredList = monitorDao.getAllMonitoredByMonitorByPage(monitorNo,page);
-        if(monitoredList.size() == 0){
-            logger.info("getAllMonitoredByMonitor | monitoredList is null!");
-            throw new AppRTException(AppExCode.U_NOT_FIND_MONITORED, "不存在对应的被监护人");
-        }
-        return monitoredList;
-    }
-
-/*    @Override
-    public List<User> getMonitoredByMonitor(Integer monitorNo,UserAndActivities userAndActivities) {
-        if(monitorNo == null){
-            logger.info("getAllMonitoredByMonitor | monitorNo is null!");
-            throw new AppRTException(AppExCode.U_NOT_FIND_MONITORED, "无法获取相应的被监护人");
-        }
-        List<User> monitoredList;
-        System.out.println(userAndActivities);
-        if(userAndActivities.getMonitored_No())  //字符串判等要用equals，不能用==
-        {
-            monitoredList = userDao.getAllMonitoredByMonitor(monitorNo,pushObject);
-        }
-        else
-            monitoredList=userDao.getProperMonitoredByMonitor(monitorNo,pushObject);
-        if(monitoredList.size() == 0){
-            logger.info("getAllMonitoredByMonitor | monitoredList is null!");
-            throw new AppRTException(AppExCode.U_NOT_FIND_MONITORED, "不存在对应的被监护人");
-        }
-        return monitoredList;
-    }*/
-
-    @Override
-    public List<User> getMonitorByMonitoredNo(Integer monitoredNo) {
-        if(monitoredNo == null){
-            logger.info("userNo is null");
-            throw new AppRTException(AppExCode.MONITORED_AND_MONITOR_ERROR,"被监护人不存在");
-        }
-        List<User> monitorlist = userDao.getMonitorByMonitoredNo(monitoredNo);
-        return monitorlist;
-    }
-
-    @Override
-    public User getPushObjectByuserId(String userId) {
-        if(userId == null || userId == "") {
-            logger.info("userId is null");
-            throw new AppRTException(AppExCode.U_COMMON_ERROR, "该对象不存在");
-        }
-        User user = userDao.getUser(userId);
-        if(user == null){
-            logger.info("user is null");
-            throw new AppRTException(AppExCode.U_COMMON_ERROR,"用户不存在");
-        }
-        return user;
-    }
 
     @Override
     public User getUserByPhoneNum(String phoneNum)
@@ -221,6 +173,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String ToHeadPicture(String base64String, Integer userId,String savePath) throws IOException {
+        BASE64Decoder decoder = new BASE64Decoder();
+        byte[] bytes1 = decoder.decodeBuffer(base64String);
+        StringBuffer buf = new StringBuffer();
+        buf.append(userId);//加上用户的编号
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date date = new Date();
+        String dt = sdf.format(date);
+        buf.append(dt);//加上日期
+        String filename=buf.toString();
+        File tmpFile = new File(savePath);
+        if (!tmpFile.exists()) {
+            //创建临时目录
+            tmpFile.mkdir();
+        }
+        File file=new File(savePath+filename+".png");
+        //File file=new File("E:\\JAVA Work\\Step\\out\\artifacts\\Step_war_exploded\\HeadPicture\\"+filename+".png");
+        FileOutputStream fos=new FileOutputStream(file);
+        fos.write(bytes1);
+        fos.close();
+        System.out.println(file);
+        String path=file.getPath();
+        //String path2=path.replace(savePath,"http://zqhstep.applinzi.com/HeadPicture/");
+        String path2=path.replace(savePath,"http://114.215.99.158:8080/Step/HeadPicture/");
+        return path2;
+    }
+
+    @Override
     public void UpdateChannelId(String channelId, Integer userId){
         if (userId == null || channelId == "") {
             logger.info("UpdateChannelId | studentNo or channelId is null!");
@@ -228,5 +208,44 @@ public class UserServiceImpl implements UserService {
         }
         userDao.UpdateChannelId(channelId,userId);
     }
+
+    @Override
+    public User getUserInformation(Integer userId) {
+        User user=userDao.getUser(userId.toString());
+        if(user.getUserHeadPicture()==null ||user.getUserHeadPicture()=="")
+         // user.setUserHeadPicture("http://zqhstep.applinzi.com/HeadPicture/120161220074002.png");
+        user.setUserHeadPicture("http://114.215.99.158:8080/Step/HeadPicture/120161220074002.png");
+        return user;
+    }
+
+
+    @Override
+    public void forgetPwd(String pwd, Integer userId) {
+        userDao.updatePwd(pwd,userId);
+    }
+
+    @Override
+    public void modifyPwd(String newPwd, String oldPwd,User user) {
+        if(oldPwd !=user.getUserPwd()){
+            logger.info("modifyPwd | oldpassword error!");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "旧密码不正确");
+        }
+        userDao.updatePwd(newPwd,user.getUserId());
+
+    }
+    @Override
+    public User getPushObjectByuserId(String userId) {
+        if(userId == null || userId == "") {
+            logger.info("userId is null");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR, "该对象不存在");
+        }
+        User user = userDao.getUser(userId);
+        if(user == null){
+            logger.info("user is null");
+            throw new AppRTException(AppExCode.U_COMMON_ERROR,"用户不存在");
+        }
+        return user;
+    }
+
 
 }

@@ -1,13 +1,10 @@
 package cn.edu.fjnu.service;
 
-import cn.edu.fjnu.beans.Monitor;
-import cn.edu.fjnu.beans.Monitored;
 import cn.edu.fjnu.beans.User;
-import cn.edu.fjnu.beans.UserAndActivities;
 import cn.edu.fjnu.dao.base.Page;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: linqiu
@@ -24,52 +21,33 @@ public interface UserService {
      */
     void saveUser(User user);
 
+    void updateUser(User user, Integer userId)throws IOException;
+
+    void updateHeadPicture(String base64String, Integer userId,String savePath) throws IOException;
+
+   /* String ReturnPicture(String base64String, Integer ringId)throws IOException;*/
     /**
-     * 更新监护人信息
-     *
-     * @param user
+    忘记密码：
      */
-    void updateUser(User user);
+    void forgetPwd(String pwd, Integer userId);
 
-    /**
-     * 修改密码
-     *
-     * @param oldPassword
-     * @param newPassword
-     */
-    void updatePassword(String userName, String oldPassword, String newPassword);
+    void modifyPwd(String newPwd, String oldPwd, User user);
 
-
-
-    /**
-     * 通过accesstoken获取监护人数据
+/*** 通过accesstoken获取监护人数据
      *
      * @param accesstoken
      * @return
-     */
+ */
     User getUserByAccesstoken(String accesstoken);
 
-    /**
-     * 分页获取监护人手下的所有被监护人
-     * @param monitorNo
-     * @return
-     */
-    List<Monitored> getAllMonitoredByMonitorByPage(Integer monitorNo, Page page);
-
-    /*
-    * 获取用户电话号码
-    * */
     User getUserByPhoneNum(String phoneNum);
 
-    /*
-    * 获取被监护人的所有监护人
-    * */
-    List<User> getMonitorByMonitoredNo(Integer monitorNo);
+    String ToHeadPicture(String base64String, Integer userId,String savePath)throws IOException;
 
-    /*
-    * 根据userId获取活动推送对象
-    * */
     User getPushObjectByuserId(String userId);
 
+
     void UpdateChannelId(String channelId, Integer userId);
+
+    User getUserInformation(Integer userId);
 }

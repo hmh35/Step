@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="Step:war">
+    <output-path>$PROJECT_DIR$/out/artifacts/Step_war</output-path>
+    <root id="archive" name="Step_war.war">
+      <element id="artifact" artifact-name="Step:war exploded" />
+    </root>
+  </artifact>
+</component>
